@@ -97,7 +97,7 @@ export async function markRetentionReleased(formData: FormData) {
 
     const ledger = await db.retentionLedger.findUnique({ where: { subcontractOrderId: orderId } })
     const releaseAmount = ledger
-      ? Number(releaseType === "pc" ? ledger.pcReleaseAmount : ledger.mcdReleaseAmount) ?? 0
+      ? Number((releaseType === "pc" ? ledger.pcReleaseAmount : ledger.mcdReleaseAmount) ?? 0)
       : 0
 
     if (releaseAmount > 0) {

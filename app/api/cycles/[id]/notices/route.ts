@@ -173,8 +173,9 @@ export async function POST(
         subject: `${noticeLabel} — ${order.reference} Cycle #${cycle.cycleNumber}`,
         html,
       })
-      // Store the Resend email ID so delivery webhooks can match back to this notice
-      const emailId = (emailResult as { id?: string })?.id
+      // Store the Resend email ID so delivery webhooks can match back to this notice.
+      // resend@6 emails.send() returns { data: { id }, error } — not a bare { id }.
+      const emailId = emailResult?.data?.id
       if (emailId) {
         if (type === "payment") {
           await db.paymentNotice.update({ where: { paymentCycleId: id }, data: { deliveryLogId: emailId } })

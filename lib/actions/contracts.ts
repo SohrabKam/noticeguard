@@ -48,6 +48,18 @@ export async function createContract(input: CreateContractInput) {
 
     const data = CreateContractSchema.parse(input)
 
+    const project = await db.project.findFirst({
+      where: { id: data.projectId, organisationId: org.id },
+    })
+    if (!project) throw new Error("Project not found")
+
+    if (data.subcontractorId) {
+      const existingSub = await db.subcontractor.findFirst({
+        where: { id: data.subcontractorId, organisationId: org.id },
+      })
+      if (!existingSub) throw new Error("Subcontractor not found")
+    }
+
     // Resolve or create subcontractor
     let subcontractorId = data.subcontractorId
     if (!subcontractorId && data.newSubcontractorName) {

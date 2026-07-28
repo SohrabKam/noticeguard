@@ -45,20 +45,19 @@ export async function PUT(
 
     // Delete non-variation lines no longer in the incoming list
     const toDelete = [...existingIds].filter((id) => !variationIds.has(id) && !incomingIds.has(id))
-    if (toDelete.length > 0) {
-      await db.activityScheduleLine.deleteMany({ where: { id: { in: toDelete } } })
-    }
 
     // Upsert all incoming lines — variation-derived lines are never
     // editable here (they're managed via the Variations flow, same rule
     // enforced by lib/actions/schedule.ts's updateScheduleLine), so skip
     // any incoming entry that refers to one instead of overwriting it.
-    const results = await Promise.all(
-      incoming
-        .filter((line) => !(line.id && variationIds.has(line.id)))
-        .map(async (line) => {
-          if (line.id && existingIds.has(line.id)) {
-            return db.activityScheduleLine.update({
+    // Built as un-awaited Prisma operations (not wrapped in async/await) so
+    // they can run inside a single $transaction with the delete — a partial
+    // failure here previously left deleted lines with no replacements.
+    const upsertOps = incoming
+      .filter((line) => !(line.id && variationIds.has(line.id)))
+      .map((line) =>
+        line.id && existingIds.has(line.id)
+          ? db.activityScheduleLine.update({
               where: { id: line.id },
               data: {
                 sortOrder: line.sortOrder,
@@ -68,8 +67,7 @@ export async function PUT(
                 indentLevel: line.indentLevel,
               },
             })
-          } else {
-            return db.activityScheduleLine.create({
+          : db.activityScheduleLine.create({
               data: {
                 subcontractOrderId: orderId,
                 sortOrder: line.sortOrder,
@@ -80,9 +78,12 @@ export async function PUT(
                 isVariation: false,
               },
             })
-          }
-        })
-    )
+      )
+
+    const [, ...results] = await db.$transaction([
+      db.activityScheduleLine.deleteMany({ where: { id: { in: toDelete } } }),
+      ...upsertOps,
+    ])
 
     return NextResponse.json({
       lines: results.map((l) => ({ id: l.id, sortOrder: l.sortOrder })),
