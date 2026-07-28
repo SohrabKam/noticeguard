@@ -59,15 +59,15 @@ export async function updateMemberEscalation(memberId: string, escalationTo: str
   }
 }
 
-// Sets a member's role directly in our own OrgMember table. Note this is a
-// second way to change roles alongside Clerk's own org-role UI (Team page) —
-// the Clerk webhook syncs Clerk-side role changes here too, keyed off a
-// substring match against Clerk's role name ("admin"/"commercial"), so a
-// Clerk-side change can overwrite a change made here and vice versa. This
-// action exists because Clerk's *default* org roles are just admin/member
-// with no "commercial" equivalent, so without a custom Clerk role configured
-// in the dashboard, every invited member would otherwise be stuck at VIEWER
-// with no in-app way to promote them.
+// Sets a member's role directly in our own OrgMember table. This is the only
+// way to grant COMMERCIAL — Clerk's *default* org roles are just
+// admin/member with no equivalent, so without a custom Clerk role configured
+// in the dashboard, every invited member would otherwise be stuck at VIEWER.
+// The Clerk webhook (app/api/webhooks/clerk/route.ts) won't clobber a
+// COMMERCIAL set here: it only ever promotes a member to ADMIN (Clerk is
+// authoritative for that) or drops an existing ADMIN to VIEWER when Clerk
+// stops reporting them as admin — it never resets COMMERCIAL back to VIEWER
+// on its own.
 export async function updateMemberRole(memberId: string, role: Role) {
   try {
     const { org, userId } = await requireOrgAction({ minRole: "ADMIN" })

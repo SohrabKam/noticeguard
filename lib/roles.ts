@@ -21,3 +21,18 @@ export function mapClerkRole(rawRole: string | null | undefined): Role {
   if (upper.includes("COMMERCIAL")) return "COMMERCIAL"
   return "VIEWER"
 }
+
+// Merges a Clerk membership sync into an existing OrgMember's role. Clerk's
+// default org roles are only admin/basic_member — no COMMERCIAL equivalent —
+// so lib/actions/settings.ts's updateMemberRole() is the only way to grant
+// COMMERCIAL. To keep that a single, well-defined authority instead of two
+// writers racing each other: Clerk may always promote to ADMIN (it's
+// authoritative for "is this person an org admin"), and Clerk removing
+// admin drops the member to VIEWER (least privilege) — any other Clerk
+// role leaves an existing COMMERCIAL/VIEWER assignment untouched, so a sync
+// never silently resets an in-app COMMERCIAL grant back to VIEWER.
+export function resolveSyncedRole(existingRole: Role, clerkMappedRole: Role): Role {
+  if (clerkMappedRole === "ADMIN") return "ADMIN"
+  if (existingRole === "ADMIN") return "VIEWER"
+  return existingRole
+}

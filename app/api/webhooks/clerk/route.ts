@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { Webhook } from "svix"
 import { db } from "@/lib/db"
-import { mapClerkRole } from "@/lib/roles"
+import { mapClerkRole, resolveSyncedRole } from "@/lib/roles"
 
 type ClerkUserEvent = {
   type: string
@@ -54,25 +54,32 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  // Handle org membership create/update — sync role into OrgMember
+  // Handle org membership create/update — sync role into OrgMember. See
+  // resolveSyncedRole() for why this doesn't just overwrite the role.
   if (type === "organizationMembership.created" || type === "organizationMembership.updated") {
     const clerkUserId = data.user_id ?? ""
     const clerkOrgId = data.organization_id ?? ""
-    const role = mapClerkRole(data.role)
+    const clerkMappedRole = mapClerkRole(data.role)
+    const name = `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim() || clerkUserId
+    const email = data.email_addresses?.[0]?.email_address ?? ""
 
     const org = await db.organisation.findUnique({ where: { clerkOrgId } })
     if (org) {
-      await db.orgMember.upsert({
+      const existing = await db.orgMember.findUnique({
         where: { clerkUserId_organisationId: { clerkUserId, organisationId: org.id } },
-        update: { role },
-        create: {
-          clerkUserId,
-          organisationId: org.id,
-          role,
-          name: `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim() || clerkUserId,
-          email: data.email_addresses?.[0]?.email_address ?? "",
-        },
       })
+
+      if (!existing) {
+        await db.orgMember.create({
+          data: { clerkUserId, organisationId: org.id, role: clerkMappedRole, name, email },
+        })
+      } else {
+        const role = resolveSyncedRole(existing.role, clerkMappedRole)
+        await db.orgMember.update({
+          where: { clerkUserId_organisationId: { clerkUserId, organisationId: org.id } },
+          data: { role, name, email },
+        })
+      }
     }
   }
 
