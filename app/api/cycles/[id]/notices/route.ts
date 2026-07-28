@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { z } from "zod"
 import { sendNoticeEmail } from "@/lib/email/resend"
 import { formatDate } from "@/lib/dates/uk-bank-holidays"
+import { escapeHtml } from "@/lib/escape-html"
 
 const ServeSchema = z.object({
   type: z.enum(["payment", "payless"]),
@@ -40,6 +41,15 @@ export async function POST(
   })
   if (!cycle) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
+  // Statutory notices are a legal record — a paid/closed cycle is done, and
+  // a served notice's figures/timestamp must not be silently rewritten.
+  if (cycle.status === "PAID" || cycle.status === "CLOSED") {
+    return NextResponse.json(
+      { error: `Cannot serve a notice on a ${cycle.status.toLowerCase()} cycle.` },
+      { status: 409 }
+    )
+  }
+
   const body = ServeSchema.safeParse(await req.json())
   if (!body.success) return NextResponse.json({ error: body.error.flatten() }, { status: 400 })
 
@@ -49,11 +59,23 @@ export async function POST(
 
   if (type === "payment") {
     const existing = await db.paymentNotice.findUnique({ where: { paymentCycleId: id } })
+    if (existing?.status === "SERVED") {
+      return NextResponse.json(
+        { error: "This Payment Notice has already been served and cannot be modified." },
+        { status: 409 }
+      )
+    }
     if (existing) {
-      await db.paymentNotice.update({
-        where: { paymentCycleId: id },
+      const { count } = await db.paymentNotice.updateMany({
+        where: { paymentCycleId: id, status: { not: "SERVED" } },
         data: { status: "SERVED", sumDue, basis, servedAt, servedByUserId: userId, serviceMethod },
       })
+      if (count === 0) {
+        return NextResponse.json(
+          { error: "This Payment Notice has already been served and cannot be modified." },
+          { status: 409 }
+        )
+      }
     } else {
       await db.paymentNotice.create({
         data: {
@@ -72,11 +94,23 @@ export async function POST(
     await db.assessment.updateMany({ where: { paymentCycleId: id }, data: { isLocked: true } })
   } else {
     const existing = await db.payLessNotice.findUnique({ where: { paymentCycleId: id } })
+    if (existing?.status === "SERVED") {
+      return NextResponse.json(
+        { error: "This Pay Less Notice has already been served and cannot be modified." },
+        { status: 409 }
+      )
+    }
     if (existing) {
-      await db.payLessNotice.update({
-        where: { paymentCycleId: id },
+      const { count } = await db.payLessNotice.updateMany({
+        where: { paymentCycleId: id, status: { not: "SERVED" } },
         data: { status: "SERVED", sumDue, basis, servedAt, servedByUserId: userId, serviceMethod },
       })
+      if (count === 0) {
+        return NextResponse.json(
+          { error: "This Pay Less Notice has already been served and cannot be modified." },
+          { status: 409 }
+        )
+      }
     } else {
       await db.payLessNotice.create({
         data: {
@@ -122,10 +156,10 @@ export async function POST(
           <span style="color:#fff;font-size:16px;font-weight:700">NoticeGuard — Notice served</span>
         </div>
         <div style="border:1px solid #e2e8f0;border-top:none;padding:20px 24px;border-radius:0 0 8px 8px">
-          <p style="margin:0 0 12px;font-size:14px">A <strong>${noticeLabel}</strong> has been recorded for ${order.reference} — Cycle #${cycle.cycleNumber}.</p>
+          <p style="margin:0 0 12px;font-size:14px">A <strong>${noticeLabel}</strong> has been recorded for ${escapeHtml(order.reference)} — Cycle #${cycle.cycleNumber}.</p>
           <table style="width:100%;border-collapse:collapse;font-size:13px">
-            <tr><td style="padding:5px 0;color:#64748b;width:160px">Subcontractor</td><td style="padding:5px 0;font-weight:600">${order.subcontractor.name}</td></tr>
-            <tr><td style="padding:5px 0;color:#64748b">Project</td><td style="padding:5px 0">${order.project.name}</td></tr>
+            <tr><td style="padding:5px 0;color:#64748b;width:160px">Subcontractor</td><td style="padding:5px 0;font-weight:600">${escapeHtml(order.subcontractor.name)}</td></tr>
+            <tr><td style="padding:5px 0;color:#64748b">Project</td><td style="padding:5px 0">${escapeHtml(order.project.name)}</td></tr>
             <tr><td style="padding:5px 0;color:#64748b">Sum</td><td style="padding:5px 0;font-weight:700">${fmtGbp(sumDue)}</td></tr>
             <tr><td style="padding:5px 0;color:#64748b">Served at</td><td style="padding:5px 0">${servedAt.toLocaleString("en-GB")}</td></tr>
           </table>
@@ -209,6 +243,20 @@ function buildNoticeHtml(p: {
 }) {
   const fmtGbp = (n: number) =>
     `£${n.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+
+  // Every tenant-editable value below must be escaped before interpolation —
+  // this is a legally-binding notice built by string templating, not a
+  // component tree that escapes by default.
+  p = {
+    ...p,
+    subcontractorName: escapeHtml(p.subcontractorName),
+    projectName: escapeHtml(p.projectName),
+    reference: escapeHtml(p.reference),
+    basis: escapeHtml(p.basis),
+    orgName: escapeHtml(p.orgName),
+    fromName: escapeHtml(p.fromName),
+    signatory: p.signatory ? escapeHtml(p.signatory) : p.signatory,
+  }
 
   return `
 <!DOCTYPE html>
