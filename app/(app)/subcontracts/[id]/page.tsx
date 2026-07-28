@@ -387,7 +387,7 @@ export default async function SubcontractDetailPage({
                           <td className="px-4 py-3">
                             {d.fileUrl ? (
                               <a
-                                href={d.fileUrl}
+                                href={`/api/compliance-documents/${d.id}/download`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs text-indigo-600 hover:underline"

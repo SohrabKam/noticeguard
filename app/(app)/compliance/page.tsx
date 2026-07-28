@@ -120,7 +120,7 @@ export default async function CompliancePage() {
                       <td className="px-4 py-2.5">
                         {doc.fileUrl ? (
                           <a
-                            href={doc.fileUrl}
+                            href={`/api/compliance-documents/${doc.id}/download`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-indigo-600 hover:underline"

@@ -17,7 +17,7 @@ export async function uploadDocument(file: File): Promise<string> {
 
   const pathname = `compliance/${crypto.randomUUID()}.${ext}`
   const blob = await upload(pathname, file, {
-    access: "public",
+    access: "private",
     handleUploadUrl: "/api/upload",
   })
   return blob.url

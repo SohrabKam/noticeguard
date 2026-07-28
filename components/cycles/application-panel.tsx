@@ -2,12 +2,26 @@
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { logApplication, updateApplication } from "@/lib/actions/assessments"
+import { initApplication, updateApplication } from "@/lib/actions/assessments"
 import { uploadDocument } from "@/lib/upload-client"
+import { ApplicationWorkspace } from "@/components/cycles/application-workspace"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Paperclip, Pencil, X } from "lucide-react"
+
+type ApplicationLine = {
+  id: string
+  sortOrder: number
+  itemRef: string
+  description: string
+  contractValue: number | string
+  isVariation: boolean
+  indentLevel: number
+  qtyOrPctClaimed: number | string | null
+  valueToDateClaimed: number | string
+  notes: string | null
+}
 
 type Application = {
   id: string
@@ -16,6 +30,7 @@ type Application = {
   receivedVia: string | null
   notes: string | null
   attachmentUrl: string | null
+  lines: ApplicationLine[]
 }
 
 export function ApplicationPanel({
@@ -54,8 +69,8 @@ export function ApplicationPanel({
     try {
       const formData = new FormData(e.currentTarget)
       if (attachmentUrl) formData.set("attachmentUrl", attachmentUrl)
-      await logApplication(cycleId, formData)
-      toast.success("Application logged")
+      await initApplication(cycleId, formData)
+      toast.success("Application logged — enter claimed values per line below")
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to log application")
@@ -88,54 +103,61 @@ export function ApplicationPanel({
 
   if (application && !editing) {
     return (
-      <div className="rounded-lg border bg-white p-6 max-w-md space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-slate-900">Application received</h3>
-          <button onClick={() => setEditing(true)} className="text-slate-400 hover:text-indigo-600">
-            <Pencil className="w-3.5 h-3.5" />
-          </button>
-        </div>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
-            <span className="text-slate-500">Amount applied for</span>
-            <span className="font-medium">£{Number(application.amountApplied).toLocaleString("en-GB", { minimumFractionDigits: 2 })}</span>
+      <div className="space-y-4 max-w-3xl">
+        <div className="rounded-lg border bg-white p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-slate-900">Application received</h3>
+            <button onClick={() => setEditing(true)} className="text-slate-400 hover:text-indigo-600">
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <div className="flex justify-between">
-            <span className="text-slate-500">Date received</span>
-            <span className="font-medium">
-              {new Date(application.dateReceived as string).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
-          </div>
-          {application.receivedVia && (
+          <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Received via</span>
-              <span className="font-medium capitalize">{application.receivedVia}</span>
+              <span className="text-slate-500">Total claimed</span>
+              <span className="font-medium">£{Number(application.amountApplied).toLocaleString("en-GB", { minimumFractionDigits: 2 })}</span>
             </div>
-          )}
-          {application.attachmentUrl && (
-            <div className="flex justify-between items-center">
-              <span className="text-slate-500">Attachment</span>
-              <a
-                href={application.attachmentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-indigo-600 hover:underline text-xs font-medium"
-              >
-                <Paperclip className="w-3 h-3" />
-                View document
-              </a>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Date received</span>
+              <span className="font-medium">
+                {new Date(application.dateReceived as string).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
             </div>
-          )}
-          {application.notes && (
-            <div className="border-t pt-2 mt-2">
-              <p className="text-slate-500 text-xs">Notes</p>
-              <p className="text-slate-700 mt-1">{application.notes}</p>
-            </div>
-          )}
+            {application.receivedVia && (
+              <div className="flex justify-between">
+                <span className="text-slate-500">Received via</span>
+                <span className="font-medium capitalize">{application.receivedVia}</span>
+              </div>
+            )}
+            {application.attachmentUrl && (
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Attachment</span>
+                <a
+                  href={`/api/applications/${application.id}/download`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-indigo-600 hover:underline text-xs font-medium"
+                >
+                  <Paperclip className="w-3 h-3" />
+                  View document
+                </a>
+              </div>
+            )}
+            {application.notes && (
+              <div className="border-t pt-2 mt-2">
+                <p className="text-slate-500 text-xs">Notes</p>
+                <p className="text-slate-700 mt-1">{application.notes}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-sm font-medium text-slate-700 mb-2">Claimed against activity schedule</h4>
+          <ApplicationWorkspace applicationId={application.id} lines={application.lines} />
         </div>
       </div>
     )
@@ -147,18 +169,6 @@ export function ApplicationPanel({
       <div className="rounded-lg border bg-white p-6 max-w-md">
         <h3 className="font-semibold text-slate-900 mb-4">Edit application</h3>
         <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
-            <Label>Amount applied for (£)</Label>
-            <Input
-              name="amountApplied"
-              type="number"
-              step="0.01"
-              min="0"
-              required
-              className="mt-1"
-              defaultValue={Number(application.amountApplied).toFixed(2)}
-            />
-          </div>
           <div>
             <Label>Date received</Label>
             <Input
@@ -230,19 +240,10 @@ export function ApplicationPanel({
   return (
     <div className="rounded-lg border bg-white p-6 max-w-md">
       <h3 className="font-semibold text-slate-900 mb-4">Log application for payment</h3>
+      <p className="text-xs text-slate-500 mb-4">
+        Records the application&rsquo;s receipt — you&rsquo;ll enter the subcontractor&rsquo;s claimed value per line item next.
+      </p>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label>Amount applied for (£)</Label>
-          <Input
-            name="amountApplied"
-            type="number"
-            step="0.01"
-            min="0"
-            required
-            className="mt-1"
-            placeholder="75000.00"
-          />
-        </div>
         <div>
           <Label>Date received</Label>
           <Input
@@ -277,9 +278,18 @@ export function ApplicationPanel({
             {attachmentUrl ? (
               <div className="flex items-center gap-2 text-xs bg-slate-50 rounded px-2 py-1.5 border">
                 <Paperclip className="w-3 h-3 text-slate-400 shrink-0" />
-                <a href={attachmentUrl} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-indigo-600 hover:underline">
-                  {attachmentUrl.split("/").pop()}
-                </a>
+                {application?.id && attachmentUrl === application.attachmentUrl ? (
+                  <a
+                    href={`/api/applications/${application.id}/download`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 truncate text-indigo-600 hover:underline"
+                  >
+                    {attachmentUrl.split("/").pop()}
+                  </a>
+                ) : (
+                  <span className="flex-1 truncate text-slate-500">{attachmentUrl.split("/").pop()} (save to view)</span>
+                )}
                 <button type="button" onClick={() => setAttachmentUrl(null)}>
                   <X className="w-3 h-3 text-slate-400 hover:text-red-500" />
                 </button>

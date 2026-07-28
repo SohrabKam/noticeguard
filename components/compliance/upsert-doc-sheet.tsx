@@ -166,14 +166,18 @@ export function UpsertDocSheet({
                 {fileUrl ? (
                   <div className="flex items-center gap-2 text-sm">
                     <Paperclip className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                    <a
-                      href={fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-indigo-600 hover:underline truncate flex-1"
-                    >
-                      Uploaded file
-                    </a>
+                    {existing?.id && fileUrl === existing.fileUrl ? (
+                      <a
+                        href={`/api/compliance-documents/${existing.id}/download`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-600 hover:underline truncate flex-1"
+                      >
+                        Uploaded file
+                      </a>
+                    ) : (
+                      <span className="text-slate-500 truncate flex-1">Uploaded file (save to view)</span>
+                    )}
                     <button
                       type="button"
                       onClick={() => { setFileUrl(""); if (fileRef.current) fileRef.current.value = "" }}

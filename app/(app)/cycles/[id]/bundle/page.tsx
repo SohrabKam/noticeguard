@@ -145,7 +145,7 @@ export default async function BundlePage({
                     <tr style={{ borderBottom: "1px solid #f1f5f9" }}>
                       <td style={{ padding: "6px 0", color: "#64748b", width: "220px" }}>Attachment</td>
                       <td style={{ padding: "6px 0" }}>
-                        <a href={cycle.application.attachmentUrl} target="_blank" rel="noopener noreferrer" style={{ color: "#4f46e5" }}>
+                        <a href={`/api/applications/${cycle.application.id}/download`} target="_blank" rel="noopener noreferrer" style={{ color: "#4f46e5" }}>
                           View document ↗
                         </a>
                       </td>

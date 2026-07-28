@@ -141,9 +141,7 @@ export function LogVariationSheet({ orderId }: { orderId: string }) {
                 return (
                   <div key={url} className="flex items-center gap-2 text-xs bg-slate-50 rounded px-2 py-1.5 border">
                     <Paperclip className="w-3 h-3 text-slate-400 shrink-0" />
-                    <a href={url} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-indigo-600 hover:underline">
-                      {name}
-                    </a>
+                    <span className="flex-1 truncate text-slate-500">{name} (save to view)</span>
                     <button type="button" onClick={() => setAttachmentUrls((prev) => prev.filter((u) => u !== url))}>
                       <X className="w-3 h-3 text-slate-400 hover:text-red-500" />
                     </button>

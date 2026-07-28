@@ -152,12 +152,25 @@ export function EditVariationSheet({ variation }: { variation: Variation }) {
               <div className="mt-1 space-y-1.5">
                 {attachmentUrls.map((url, i) => {
                   const name = url.split("/").pop() ?? `File ${i + 1}`
+                  // Only an attachment at its originally-saved index/value is
+                  // fetchable via the download route today — anything added
+                  // or reordered in this editing session isn't persisted yet.
+                  const isSaved = variation.attachmentUrls[i] === url
                   return (
                     <div key={url} className="flex items-center gap-2 text-xs bg-slate-50 rounded px-2 py-1.5 border">
                       <Paperclip className="w-3 h-3 text-slate-400 shrink-0" />
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-indigo-600 hover:underline">
-                        {name}
-                      </a>
+                      {isSaved ? (
+                        <a
+                          href={`/api/variations/${variation.id}/attachments/${i}/download`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 truncate text-indigo-600 hover:underline"
+                        >
+                          {name}
+                        </a>
+                      ) : (
+                        <span className="flex-1 truncate text-slate-500">{name} (save to view)</span>
+                      )}
                       <button type="button" onClick={() => setAttachmentUrls((prev) => prev.filter((u) => u !== url))}>
                         <X className="w-3 h-3 text-slate-400 hover:text-red-500" />
                       </button>
