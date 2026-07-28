@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BuilderOps (NoticeGuard)
+
+A multi-tenant B2B SaaS for main contractors and commercial managers to
+administer subcontractor payments and statutory compliance under the UK
+**Housing Grants, Construction and Regeneration Act 1996**.
+
+It tracks subcontract order values, projects payment cycles from contract
+terms, evaluates periodic application claims, and automatically enforces
+critical statutory notification deadlines (Payment Notices and Pay Less
+Notices) — including UK-bank-holiday-aware deadline calculation. It also
+monitors subcontractor compliance documentation (insurance, CIS status,
+H&S policies) and archives every legally-binding communication in an
+append-only audit trail.
+
+## What it does
+
+- **Contract setup** — a guided wizard captures the project, subcontractor,
+  payment terms and activity schedule, then generates the full run of
+  payment cycles for the contract's duration.
+- **Applications & valuations** — subcontractors submit payment
+  applications (by email or the public API); commercial managers assess
+  them line-by-line in a spreadsheet-style grid with automatic
+  retention/net calculation.
+- **Statutory notices** — Payment Notices and Pay Less Notices are served
+  with figures frozen at serve time, emailed to subcontractors and
+  recipients, and logged for delivery confirmation.
+- **Automated deadline sweeps** — background jobs watch every live cycle
+  for approaching/missed deadlines, expiring compliance documents,
+  retention release dates, and send daily digests — all scoped per
+  organisation.
+- **Compliance tracking** — per-subcontractor document checklists (e.g.
+  Employers Liability, Public Liability, CIS Confirmation) with
+  valid/expiring/expired status.
+- **Multi-tenant by design** — every record is scoped to an
+  `Organisation`, mapped 1:1 to a Clerk organisation (or a personal
+  workspace for solo users), with role-based access (`VIEWER` <
+  `COMMERCIAL` < `ADMIN`).
+- **Programmatic access** — a versioned public API (`/api/v1`) with
+  API-key auth for downstream integrations, alongside inbound email
+  parsing and outbound webhooks.
+
+## Tech stack
+
+- **Framework:** [Next.js](https://nextjs.org) 16 (App Router, Turbopack,
+  `proxy.ts` middleware) + React 19
+- **Language:** TypeScript
+- **Database:** PostgreSQL via [Prisma](https://www.prisma.io) ORM, using
+  the Neon serverless driver adapter (`@prisma/adapter-neon`) over
+  HTTP/WebSocket — no query-engine binary, no connection-pool exhaustion
+- **Auth & tenancy:** [Clerk](https://clerk.com) — sessions, organisation
+  membership, and role sync via webhooks
+- **Background jobs:** [Inngest](https://www.inngest.com) — hourly/daily
+  cron sweeps for deadlines, retention, compliance expiry, and digests
+- **Email:** [Resend](https://resend.com) — outbound statutory notices
+  and alerts, plus inbound application parsing
+- **File storage:** [Vercel Blob](https://vercel.com/storage/blob) —
+  client-direct uploads for compliance documents and attachments
+- **UI:** Tailwind CSS v4, Base UI / shadcn-style components,
+  [Glide Data Grid](https://github.com/glideapps/glide-data-grid) for the
+  assessment spreadsheet
+- **Validation:** Zod
+- **Webhook verification:** Svix (Clerk + Resend)
+- **Testing:** Vitest
 
 ## Getting Started
 
-First, run the development server:
+Copy `.env.local.example` to `.env.local` and fill in the required
+secrets (Clerk, Neon/`DATABASE_URL`, Resend, Inngest, Vercel Blob), then:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Other useful commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test    # run the Vitest suite
+npm run lint
+npx prisma studio   # inspect the database
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Clerk Documentation](https://clerk.com/docs)

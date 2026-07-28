@@ -1,10 +1,11 @@
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { db } from "@/lib/db"
+import { mapClerkRole } from "@/lib/roles"
 import { OnboardingForm } from "./onboarding-form"
 
 export default async function OnboardingPage() {
-  const { orgId, userId } = await auth()
+  const { orgId, userId, orgRole } = await auth()
   if (!userId) redirect("/sign-in")
 
   const tenantId = orgId ?? userId
@@ -14,12 +15,17 @@ export default async function OnboardingPage() {
   const displayName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim()
   const email = user.emailAddresses[0]?.emailAddress ?? ""
 
-  // Already onboarded — ensure member record and redirect
+  // Already onboarded — ensure member record and redirect. Role comes from
+  // the verified Clerk org role (never a blanket ADMIN) so a member simply
+  // landing here before their webhook-synced row exists can't self-promote.
+  // A personal (org-less) tenant is solely owned by its one user, so ADMIN
+  // is correct there.
   const existing = await db.organisation.findUnique({ where: { clerkOrgId: tenantId } })
   if (existing) {
+    const role = orgId ? mapClerkRole(orgRole) : "ADMIN"
     await db.orgMember.upsert({
       where: { clerkUserId_organisationId: { clerkUserId: userId, organisationId: existing.id } },
-      create: { clerkUserId: userId, organisationId: existing.id, role: "ADMIN", name: displayName || email, email },
+      create: { clerkUserId: userId, organisationId: existing.id, role, name: displayName || email, email },
       update: {},
     })
     redirect("/dashboard")
@@ -40,12 +46,7 @@ export default async function OnboardingPage() {
           </p>
         </div>
 
-        <OnboardingForm
-          userId={userId}
-          tenantId={tenantId}
-          displayName={displayName || email}
-          email={email}
-        />
+        <OnboardingForm email={email} />
       </div>
     </div>
   )

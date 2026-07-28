@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { Webhook } from "svix"
 import { db } from "@/lib/db"
+import { mapClerkRole } from "@/lib/roles"
 
 type ClerkUserEvent = {
   type: string
@@ -57,19 +58,17 @@ export async function POST(req: NextRequest) {
   if (type === "organizationMembership.created" || type === "organizationMembership.updated") {
     const clerkUserId = data.user_id ?? ""
     const clerkOrgId = data.organization_id ?? ""
-    const rawRole = (data.role ?? "basic_member").toUpperCase()
-    const role =
-      rawRole.includes("ADMIN") ? "ADMIN" : rawRole.includes("COMMERCIAL") ? "COMMERCIAL" : "VIEWER"
+    const role = mapClerkRole(data.role)
 
     const org = await db.organisation.findUnique({ where: { clerkOrgId } })
     if (org) {
       await db.orgMember.upsert({
         where: { clerkUserId_organisationId: { clerkUserId, organisationId: org.id } },
-        update: { role: role as "ADMIN" | "COMMERCIAL" | "VIEWER" },
+        update: { role },
         create: {
           clerkUserId,
           organisationId: org.id,
-          role: role as "ADMIN" | "COMMERCIAL" | "VIEWER",
+          role,
           name: `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim() || clerkUserId,
           email: data.email_addresses?.[0]?.email_address ?? "",
         },

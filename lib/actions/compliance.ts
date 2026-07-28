@@ -43,8 +43,8 @@ export async function upsertComplianceDoc(formData: FormData) {
     const fileUrl = data.fileUrl || undefined
 
     if (data.existingId) {
-      await db.complianceDocument.update({
-        where: { id: data.existingId },
+      const { count } = await db.complianceDocument.updateMany({
+        where: { id: data.existingId, subcontractorId: data.subcontractorId },
         data: {
           documentType: data.documentType,
           issueDate: data.issueDate ? new Date(data.issueDate) : null,
@@ -54,6 +54,7 @@ export async function upsertComplianceDoc(formData: FormData) {
           ...(fileUrl ? { fileUrl } : {}),
         },
       })
+      if (count === 0) throw new Error("Compliance document not found")
     } else {
       await db.complianceDocument.create({
         data: {

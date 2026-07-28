@@ -7,17 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { completeOnboarding } from "./actions"
 
-export function OnboardingForm({
-  userId,
-  tenantId,
-  displayName,
-  email,
-}: {
-  userId: string
-  tenantId: string
-  displayName: string
-  email: string
-}) {
+export function OnboardingForm({ email }: { email: string }) {
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
@@ -37,11 +27,6 @@ export function OnboardingForm({
   return (
     <div className="bg-white rounded-xl border shadow-sm p-6">
       <form onSubmit={handleSubmit} className="space-y-5">
-        <input type="hidden" name="userId" value={userId} />
-        <input type="hidden" name="tenantId" value={tenantId} />
-        <input type="hidden" name="memberName" value={displayName} />
-        <input type="hidden" name="memberEmail" value={email} />
-
         <div>
           <Label>Company / organisation name</Label>
           <Input
