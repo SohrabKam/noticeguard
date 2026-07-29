@@ -1,6 +1,10 @@
 import { PrismaClient } from "./generated/prisma/client"
 import { PrismaNeon } from "@prisma/adapter-neon"
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set — cannot connect to the database.")
+}
+
 // Neon's HTTP/WebSocket driver instead of Prisma's native query-engine
 // binary — Vercel's serverless runtime kept failing to locate the
 // rhel-openssl-3.0.x binary regardless of build tracing config, and this

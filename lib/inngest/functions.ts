@@ -658,7 +658,7 @@ export const missedApplicationSweep = inngest.createFunction(
       if (!org) continue
 
       const appExpected = new Date(cycle.applicationExpectedDate as unknown as string)
-      const daysOverdue = Math.floor((now.getTime() - appExpected.getTime()) / 86_400_000)
+      const daysOverdue = differenceInCalendarDays(now, appExpected)
 
       // Only alert on days 1, 2, and 3 overdue to avoid repeated noise
       if (daysOverdue < 1 || daysOverdue > 3) continue

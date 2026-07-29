@@ -1,5 +1,6 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client"
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@clerk/nextjs/server"
 import { requireOrgRoute } from "@/lib/auth"
 
 // Compliance documents, variation attachments, and application attachments
@@ -24,6 +25,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const authResult = await requireOrgRoute({ minRole: "COMMERCIAL" })
   if (!authResult.ok) return authResult.response
 
+  // The client embeds its own tenant id in the requested pathname
+  // (lib/upload-client.ts); require it to match the caller's actual,
+  // session-derived tenant rather than trusting whatever prefix the
+  // request claims — otherwise a caller could request a token for any
+  // path, including one shaped like another tenant's.
+  const { orgId, userId } = await auth()
+  const tenantId = orgId ?? userId
+  const requiredPrefix = `compliance/${tenantId}/`
+
   const body = (await request.json()) as HandleUploadBody
 
   try {
@@ -31,6 +41,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {
+        if (!pathname.startsWith(requiredPrefix)) {
+          throw new Error("Upload path is not valid for this organisation.")
+        }
         const ext = pathname.split(".").pop()?.toLowerCase() ?? ""
         if (!ALLOWED_EXTENSIONS.has(ext)) {
           throw new Error("Unsupported file type. Allowed: PDF, PNG, JPG, DOC(X), XLS(X).")

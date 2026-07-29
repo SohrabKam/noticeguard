@@ -1,6 +1,7 @@
 "use client"
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
 import { upsertComplianceDoc } from "@/lib/actions/compliance"
 import { uploadDocument } from "@/lib/upload-client"
@@ -50,13 +51,14 @@ export function UpsertDocSheet({
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const { orgId, userId } = useAuth()
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
     try {
-      const url = await uploadDocument(file)
+      const url = await uploadDocument(file, orgId ?? userId ?? "")
       setFileUrl(url)
       toast.success("File uploaded")
     } catch (err) {

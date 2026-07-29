@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { formatDate } from "@/lib/dates/uk-bank-holidays"
 import { getRagStatus } from "@/lib/dashboard"
 import { differenceInCalendarDays } from "date-fns"
+import { toCsv } from "@/lib/csv"
 
 const LIVE_STATUSES = [
   "AWAITING_APPLICATION",
@@ -94,14 +95,7 @@ export async function GET() {
     ]
   })
 
-  const escape = (v: string) =>
-    v.includes(",") || v.includes('"') || v.includes("\n")
-      ? `"${v.replace(/"/g, '""')}"`
-      : v
-
-  const csv = [headers, ...rows]
-    .map((row) => row.map(escape).join(","))
-    .join("\r\n")
+  const csv = toCsv([headers, ...rows])
 
   const dateStr = now.toISOString().split("T")[0]
   const filename = `${org.name.replace(/[^a-z0-9-]/gi, "_")}_compliance_${dateStr}.csv`

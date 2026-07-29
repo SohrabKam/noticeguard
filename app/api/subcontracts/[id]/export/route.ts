@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireOrgRoute } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { formatDate } from "@/lib/dates/uk-bank-holidays"
+import { toCsv } from "@/lib/csv"
 
 export async function GET(
   _req: NextRequest,
@@ -76,14 +77,7 @@ export async function GET(
     ]
   })
 
-  const escape = (v: string) =>
-    v.includes(",") || v.includes('"') || v.includes("\n")
-      ? `"${v.replace(/"/g, '""')}"`
-      : v
-
-  const csv = [headers, ...rows]
-    .map((row) => row.map(escape).join(","))
-    .join("\r\n")
+  const csv = toCsv([headers, ...rows])
 
   const filename = `${order.reference.replace(/[^a-z0-9-]/gi, "_")}_cycles.csv`
 

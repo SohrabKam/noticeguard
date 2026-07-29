@@ -21,6 +21,7 @@ import {
   Download,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { toCsv } from "@/lib/csv"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -71,10 +72,10 @@ function exportCsv(lines: ScheduleLine[], displayValues: number[]) {
   const rows = lines.map((l, i) => [
     l.indentLevel === 0 ? "Section" : l.indentLevel === 1 ? "Item" : "Sub-item",
     l.itemRef,
-    `"${l.description.replace(/"/g, '""')}"`,
+    l.description,
     displayValues[i].toFixed(2),
   ])
-  const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n")
+  const csv = toCsv([headers, ...rows])
   const blob = new Blob([csv], { type: "text/csv" })
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")

@@ -1,6 +1,7 @@
 "use client"
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
 import { logApplication, updateApplication } from "@/lib/actions/assessments"
 import { uploadDocument } from "@/lib/upload-client"
@@ -31,13 +32,14 @@ export function ApplicationPanel({
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const { orgId, userId } = useAuth()
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
     try {
-      const url = await uploadDocument(file)
+      const url = await uploadDocument(file, orgId ?? userId ?? "")
       setAttachmentUrl(url)
       toast.success("File attached")
     } catch (err) {

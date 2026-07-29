@@ -5,12 +5,24 @@ import { serializeComplianceDocument } from "@/lib/api-v1/serializers"
 import { computeComplianceStatus } from "@/lib/compliance-status"
 import { z } from "zod"
 
+// z.string().url() alone accepts any syntactically valid scheme
+// (javascript:, data:, ftp:, ...) — this is rendered as a clickable link in
+// the compliance UI, so require https: explicitly rather than trusting URL
+// syntax validation alone.
+const isHttpsUrl = (url: string) => {
+  try {
+    return new URL(url).protocol === "https:"
+  } catch {
+    return false
+  }
+}
+
 const PushComplianceDocSchema = z.object({
   documentType: z.string().min(1),
   issueDate: z.string().optional(),
   expiryDate: z.string().optional(),
   notes: z.string().optional(),
-  fileUrl: z.string().url().optional(),
+  fileUrl: z.string().url().refine(isHttpsUrl, { message: "fileUrl must use https://" }).optional(),
 })
 
 // Push (create-or-update) a compliance document for the subcontractor behind

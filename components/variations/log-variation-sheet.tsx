@@ -1,6 +1,7 @@
 "use client"
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
 import { createVariation } from "@/lib/actions/variations"
 import { uploadDocument } from "@/lib/upload-client"
@@ -30,13 +31,14 @@ export function LogVariationSheet({ orderId }: { orderId: string }) {
   const [attachmentUrls, setAttachmentUrls] = useState<string[]>([])
   const fileRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const { orgId, userId } = useAuth()
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
     try {
-      const url = await uploadDocument(file)
+      const url = await uploadDocument(file, orgId ?? userId ?? "")
       setAttachmentUrls((prev) => [...prev, url])
       toast.success("File attached")
     } catch (err) {
