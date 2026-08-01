@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireOrgRoute } from "@/lib/auth"
 import { db } from "@/lib/db"
+import { partitionVariationIds } from "@/lib/schedule-lines"
 import { z } from "zod"
 
 const LineSchema = z.object({
@@ -38,7 +39,7 @@ export async function PUT(
 
     const incoming = body.data.lines
     const existingIds = new Set(order.scheduleLines.map((l) => l.id))
-    const variationIds = new Set(order.scheduleLines.filter((l) => l.isVariation).map((l) => l.id))
+    const { variationIds } = partitionVariationIds(order.scheduleLines)
 
     // IDs present in incoming (non-variation lines only)
     const incomingIds = new Set(incoming.filter((l) => l.id).map((l) => l.id!))
@@ -47,9 +48,9 @@ export async function PUT(
     const toDelete = [...existingIds].filter((id) => !variationIds.has(id) && !incomingIds.has(id))
 
     // Upsert all incoming lines — variation-derived lines are never
-    // editable here (they're managed via the Variations flow, same rule
-    // enforced by lib/actions/schedule.ts's updateScheduleLine), so skip
-    // any incoming entry that refers to one instead of overwriting it.
+    // editable here (they're managed via the Variations flow; the shared
+    // rule lives in lib/schedule-lines.ts), so skip any incoming entry
+    // that refers to one instead of overwriting it.
     // Built as un-awaited Prisma operations (not wrapped in async/await) so
     // they can run inside a single $transaction with the delete — a partial
     // failure here previously left deleted lines with no replacements.

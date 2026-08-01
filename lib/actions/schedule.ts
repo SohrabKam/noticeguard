@@ -2,6 +2,7 @@
 import { requireOrgAction } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { generateCycles } from "@/lib/dates/cycle-generator"
+import { assertEditableScheduleLine } from "@/lib/schedule-lines"
 import { revalidatePath } from "next/cache"
 import { toSafeErrorMessage } from "@/lib/prisma-error"
 
@@ -17,7 +18,7 @@ export async function updateScheduleLine(
       include: { subcontractOrder: true },
     })
     if (!line) throw new Error("Line not found")
-    if (line.isVariation) throw new Error("Cannot edit variation lines here")
+    assertEditableScheduleLine(line, "edit")
 
     await db.activityScheduleLine.update({
       where: { id: lineId },
@@ -74,7 +75,7 @@ export async function deleteScheduleLine(lineId: string) {
       where: { id: lineId, subcontractOrder: { organisationId: org.id } },
     })
     if (!line) throw new Error("Line not found")
-    if (line.isVariation) throw new Error("Cannot delete variation lines here")
+    assertEditableScheduleLine(line, "delete")
 
     await db.activityScheduleLine.delete({ where: { id: lineId } })
 
