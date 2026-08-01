@@ -4,6 +4,7 @@ import { getRagStatus } from "@/lib/dashboard"
 import { sendDeadlineAlert, sendDocExpiryAlert, sendDailyDigest, sendMissedApplicationAlert, resend } from "@/lib/email/resend"
 import { differenceInCalendarDays } from "date-fns"
 import { CycleStatus } from "@/lib/generated/prisma/client"
+import { escapeHtml } from "@/lib/escape-html"
 
 const LIVE_STATUSES: CycleStatus[] = [
   "AWAITING_APPLICATION",
@@ -315,8 +316,8 @@ export const retentionReleaseSweep = inngest.createFunction(
                   A <strong>${release.label}</strong> retention release is due <strong>${dueSoon}</strong>.
                 </p>
                 <table style="width:100%;border-collapse:collapse;font-size:13px">
-                  <tr><td style="padding:5px 0;color:#64748b;width:160px">Subcontractor</td><td style="padding:5px 0;font-weight:600">${order.subcontractor.name}</td></tr>
-                  <tr><td style="padding:5px 0;color:#64748b">Project</td><td style="padding:5px 0">${order.project.name}</td></tr>
+                  <tr><td style="padding:5px 0;color:#64748b;width:160px">Subcontractor</td><td style="padding:5px 0;font-weight:600">${escapeHtml(order.subcontractor.name)}</td></tr>
+                  <tr><td style="padding:5px 0;color:#64748b">Project</td><td style="padding:5px 0">${escapeHtml(order.project.name)}</td></tr>
                   <tr><td style="padding:5px 0;color:#64748b">Release type</td><td style="padding:5px 0">${release.label}</td></tr>
                   <tr><td style="padding:5px 0;color:#64748b">Due date</td><td style="padding:5px 0">${release.date.toLocaleDateString("en-GB", { dateStyle: "long" })}</td></tr>
                   ${release.amount !== null ? `<tr><td style="padding:5px 0;color:#64748b">Amount</td><td style="padding:5px 0;font-weight:700">${fmtGbp(release.amount)}</td></tr>` : ""}
@@ -502,17 +503,9 @@ export const dailyDigestSweep = inngest.createFunction(
         })
         if (!org) return
 
-        const LIVE_CYCLE_STATUSES: CycleStatus[] = [
-          "AWAITING_APPLICATION",
-          "APPLICATION_RECEIVED",
-          "UNDER_ASSESSMENT",
-          "NOTICE_SERVED",
-          "PAY_LESS_SERVED",
-        ]
-
         const cycles = await db.paymentCycle.findMany({
           where: {
-            status: { in: LIVE_CYCLE_STATUSES },
+            status: { in: LIVE_STATUSES },
             paymentSchedule: { subcontractOrder: { organisationId: orgId, isActive: true } },
           },
           include: {

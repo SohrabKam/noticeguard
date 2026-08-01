@@ -154,54 +154,6 @@ export async function sendMissedApplicationAlert(payload: MissedApplicationAlert
   })
 }
 
-export type RetentionAlertPayload = {
-  to: string[]
-  subcontractorName: string
-  projectName: string
-  orderId: string
-  releaseType: string
-  releaseLabel: string
-  releaseDate: Date
-  daysUntil: number
-  amount: number | null
-  orgName: string
-}
-
-export async function sendRetentionAlert(payload: RetentionAlertPayload) {
-  const urgency = payload.daysUntil <= 1 ? "URGENT" : payload.daysUntil <= 7 ? "Due soon" : "Upcoming"
-  const subject = `[${urgency}] ${payload.releaseLabel} — ${payload.subcontractorName}`
-
-  const html = `
-    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#1e293b">
-      <div style="background:#1e293b;padding:20px 24px;border-radius:8px 8px 0 0">
-        <span style="color:#fff;font-size:18px;font-weight:700">NoticeGuard</span>
-      </div>
-      <div style="border:1px solid #e2e8f0;border-top:none;padding:24px;border-radius:0 0 8px 8px">
-        <div style="background:#fef9c3;border-radius:6px;padding:12px 16px;margin-bottom:20px">
-          <strong>${urgency}:</strong> ${payload.releaseLabel} in <strong>${payload.daysUntil} day(s)</strong>
-        </div>
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <tr><td style="padding:6px 0;color:#64748b;width:160px">Subcontractor</td><td style="padding:6px 0;font-weight:600">${payload.subcontractorName}</td></tr>
-          <tr><td style="padding:6px 0;color:#64748b">Project</td><td style="padding:6px 0">${payload.projectName}</td></tr>
-          <tr><td style="padding:6px 0;color:#64748b">Release type</td><td style="padding:6px 0">${payload.releaseLabel}</td></tr>
-          <tr><td style="padding:6px 0;color:#64748b">Release date</td><td style="padding:6px 0;font-weight:600">${formatDate(payload.releaseDate)}</td></tr>
-          ${payload.amount ? `<tr><td style="padding:6px 0;color:#64748b">Amount</td><td style="padding:6px 0;font-weight:600">£${payload.amount.toLocaleString("en-GB", { minimumFractionDigits: 2 })}</td></tr>` : ""}
-        </table>
-        <p style="margin-top:24px;font-size:12px;color:#94a3b8">
-          Sent by NoticeGuard on behalf of ${payload.orgName}.
-        </p>
-      </div>
-    </div>
-  `
-
-  return resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL ?? "notices@noticeguard.app",
-    to: payload.to,
-    subject,
-    html,
-  })
-}
-
 export type DailyDigestPayload = {
   to: string[]
   orgName: string
