@@ -82,6 +82,23 @@ npm run lint
 npx prisma studio   # inspect the database
 ```
 
+## Testing
+
+- **Unit / action tests** — Vitest (`npm test`). Server actions and routes are
+  tested with a seam-mock pattern: the two external seams (`@clerk/nextjs/server`
+  or `@/lib/auth`, and `@/lib/db`) are mocked so each test exercises only the
+  action's own logic, including cross-tenant (organisation-scoping) regression
+  tests.
+- **Authenticated UAT** — a Playwright script drives a real browser through the
+  client-onboarding journey (sign in → `/onboarding` → create organisation →
+  dashboard) against a deployed environment. Credentials are passed via env,
+  never committed:
+
+  ```bash
+  UAT_EMAIL=you@example.com UAT_PASSWORD=... node scripts/uat.mjs
+  # optional: UAT_BASE_URL=http://localhost:3000 UAT_SHOTS=/tmp/shots
+  ```
+
 ## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)

@@ -42,3 +42,14 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# claude code — personal/local overrides only, settings.json is shared
+.claude/settings.local.json
+
+# hermes agent local state
+.hermes/
+
+# throwaway UAT / scratch scripts (run ad hoc, may carry test creds via env)
+scratch-*.mjs
+scripts/uat*.mjs
+!scripts/uat.mjs
