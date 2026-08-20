@@ -29,13 +29,15 @@ Status: sign-in live, onboarding works, isolation clean, 58/58 tests, seed data 
 
 Site Samurai teardown checklist: single-portfolio deadline view? bank-holiday handling visible? served notices frozen + provable + append-only? clicks from signup to first-subcontract-tracked? → write up findings as LinkedIn content either way.
 
-### STAGE 2 — Subbie drawdown / cash forecast (next build)
+### STAGE 2 — Subbie drawdown / cash forecast + subbie portal (next build)
 Spec exists: `docs/feature-spec-cash-forecast.md`. Data model already holds ~90% (cycle dates, assessments, RetentionLedger). Only gap = forecast amounts for future cycles.
 
 1. Screen A: per-subcontract drawdown tab (Tier-1 even drawdown, auto-redistributing)
 2. Screen B: portfolio month-by-month rollup (the FD view) + CSV export
-3. Tier-2 S-curve profiles at subcontract setup
-4. Tier-3 (later): learn per-subbie valuation drift — only once real pilot data exists. Publish our own MAPE vs S-curve baseline (no independent study exists — first-mover credibility)
+3. **Subbie portal (from pain-points research):** free, no-login (or low-friction), NO per-claim fees, Excel-flexible (no "interlocks" rejecting legitimate inputs) — explicitly avoids the two Payapps resentments. Applications arrive assessment-ready: line-by-line against the BOQ + required backup.
+4. Tier-2 S-curve profiles at subcontract setup
+5. Tier-3 (later): learn per-subbie valuation drift — only once real pilot data exists. Publish our own MAPE vs S-curve baseline.
+6. **Auto-CVR:** the 2–4 days/month CVR pain (Claire Hill: 3–4 days) falls out of the drawdown data — fold CVR generation into the rollup workstream.
 
 ### STAGE 3 — Assessment assistance as FLAGS (after drawdown)
 From research: UK assessment AI is nascent; extraction breaks on handwriting (~70% real-world accuracy). Winning design = deterministic anomaly flags, LLM explains:

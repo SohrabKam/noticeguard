@@ -56,7 +56,9 @@ Three tiers, in order of preference — and the spec deliberately starts with th
 **Screen B — Portfolio cash forecast.** New top-level nav item ("Cash forecast" — this is the FD view).
 - Month-by-month grid: rows = subcontracts (grouped by project), columns = months, cells = net cash out; row/column totals.
 - Filter by project, subcontractor, date range. Export CSV (the FD will want it in Excel regardless — lean into that, don't fight it).
+- **Excel data feed (from Sohrab's iplicit-model idea):** a per-org API key + a documented pull endpoint (and/or an official Excel add-in) so users can pull live drawdown/valuation data straight into Excel, mix it with their own budgets on a separate sheet, and build custom cash-flow models. Longer-term: a lightweight add-in (Office.js task pane, like iplicit's) rather than raw CSV. Distribution beat: "your FD's own Excel model, fed live by NoticeGuard."
 - Retention releases shown as negative cash-out (money coming back) in the relevant months.
+- **Auto-CVR (from pain-points research):** the month-end CVR pack QS teams spend 2–4 days assembling (Claire Hill: 3–4 days) — generate it from this same live data. Directors get a current commercial position, not three-week-old numbers.
 
 ## 6. Build order (value-per-effort)
 

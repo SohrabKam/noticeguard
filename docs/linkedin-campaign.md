@@ -245,6 +245,24 @@ Content without an audience is a diary. Build the room while you fill it.
 >
 > If you want to add your numbers to next month's post, we're taking on [N] more pilots.
 
+> **Post 17 (Wed W6) — "on time but invalid" (service-method failure, from pain-points research)**
+> Your Pay Less Notice was on time. It was also invalid.
+>
+> One contractor served their notice by email — but the subcontract said service had to be by post. Full notified sum payable. Deadline compliance isn't just the date; it's the method.
+>
+> If your tracker doesn't capture HOW a notice was served (with proof), you don't have an audit trail. You have a hope.
+>
+> When did you last check what your subcontract says about service?
+
+> **Post 18 (Fri W6) — competitive (Payapps BOQ pain, from their own users)**
+> The most-used UK payment tool has users pasting "see attached spreadsheet" into it, because its BOQ/activity-schedule section won't take legitimate inputs.
+>
+> Their words: "if you're an advanced QS you'll find yourself doing Excel assessments and fudging the same in."
+>
+> If your software makes you fall back to Excel, it isn't the system. It's a dashboard for the system you still run in a spreadsheet.
+>
+> Applications should be assessed line-by-line, in the tool, against the schedule. Not approximated in Excel and uploaded.
+
 ---
 
 ## 5. The daily engagement routine (20 min/day — this is where pilots actually come from)
