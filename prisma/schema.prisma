@@ -301,9 +301,36 @@ model Application {
   notes          String?
   createdAt      DateTime @default(now())
 
-  paymentCycle PaymentCycle @relation(fields: [paymentCycleId], references: [id], onDelete: Cascade)
+  paymentCycle PaymentCycle      @relation(fields: [paymentCycleId], references: [id], onDelete: Cascade)
+  lines        ApplicationLine[]
 
   @@map("applications")
+}
+
+// Line-by-line detail of what the subcontractor is claiming this cycle —
+// mirrors AssessmentLine's shape (seeded from the same ActivityScheduleLine
+// template) but without certification-specific fields. Entered by contractor
+// staff transcribing the subcontractor's claim, not by the subcontractor
+// directly (no subcontractor-facing portal exists).
+model ApplicationLine {
+  id                 String   @id @default(cuid())
+  applicationId      String
+  sortOrder          Int
+  itemRef            String
+  description        String
+  contractValue      Decimal  @db.Decimal(14, 2)
+  isVariation        Boolean  @default(false)
+  indentLevel        Int      @default(0)
+  variationId        String?
+  qtyOrPctClaimed    Decimal? @db.Decimal(8, 4)
+  valueToDateClaimed Decimal  @default(0) @db.Decimal(14, 2)
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_lines")
 }
 
 // ─── Assessment ──────────────────────────────────────────────────────────────
@@ -338,6 +365,7 @@ model AssessmentLine {
   variationId         String?
   qtyOrPctComplete    Decimal? @db.Decimal(8, 4)
   valueToDate         Decimal  @default(0) @db.Decimal(14, 2)
+  claimedValueToDate  Decimal? @db.Decimal(14, 2)
   previouslyCertified Decimal  @default(0) @db.Decimal(14, 2)
   thisCycle           Decimal  @default(0) @db.Decimal(14, 2)
   overrideCapFlag     Boolean  @default(false)

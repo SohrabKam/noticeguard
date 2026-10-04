@@ -49,3 +49,17 @@ export function computeAssessmentTotals(
   const net = gross - retention - prev
   return { gross, retention, prev, net }
 }
+
+export type ApplicationTotalLine = {
+  indentLevel: number
+  valueToDateClaimed: number
+}
+
+// Same bottom-up parent/child summing as computeAssessmentTotals, but for an
+// application's claimed figures — no retention/previously-certified/net
+// concept at the claim stage, just the gross value claimed.
+export function computeApplicationTotal(lines: ApplicationTotalLine[]): number {
+  const asValueToDate = lines.map((l) => ({ indentLevel: l.indentLevel, valueToDate: l.valueToDateClaimed }))
+  const autoSums = computeAutoSums(asValueToDate)
+  return lines.reduce((sum, _l, i) => (isParentRow(asValueToDate, i) ? sum : sum + autoSums[i]), 0)
+}

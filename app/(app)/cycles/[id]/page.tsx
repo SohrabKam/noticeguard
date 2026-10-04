@@ -32,7 +32,7 @@ export default async function CycleWorkspacePage({
       },
     },
     include: {
-      application: true,
+      application: { include: { lines: { orderBy: { sortOrder: "asc" } } } },
       assessment: {
         include: {
           lines: { orderBy: { sortOrder: "asc" } },
@@ -65,7 +65,7 @@ export default async function CycleWorkspacePage({
       where: { id },
       include: {
         assessment: { include: { lines: { orderBy: { sortOrder: "asc" } } } },
-        application: true,
+        application: { include: { lines: { orderBy: { sortOrder: "asc" } } } },
         paymentNotice: true,
         payLessNotice: true,
         paymentSchedule: {
@@ -113,6 +113,7 @@ export default async function CycleWorkspacePage({
           indentLevel: l.indentLevel,
           qtyOrPctComplete: l.qtyOrPctComplete !== null ? Number(l.qtyOrPctComplete) : null,
           valueToDate: Number(l.valueToDate),
+          claimedValueToDate: l.claimedValueToDate !== null ? Number(l.claimedValueToDate) : null,
           previouslyCertified: Number(l.previouslyCertified),
           thisCycle: Number(l.thisCycle),
           notes: l.notes,
@@ -130,6 +131,18 @@ export default async function CycleWorkspacePage({
         receivedVia: cycle.application.receivedVia,
         notes: cycle.application.notes,
         attachmentUrl: cycle.application.attachmentUrl,
+        lines: cycle.application.lines.map((l) => ({
+          id: l.id,
+          sortOrder: l.sortOrder,
+          itemRef: l.itemRef,
+          description: l.description,
+          contractValue: Number(l.contractValue),
+          isVariation: l.isVariation,
+          indentLevel: l.indentLevel,
+          qtyOrPctClaimed: l.qtyOrPctClaimed !== null ? Number(l.qtyOrPctClaimed) : null,
+          valueToDateClaimed: Number(l.valueToDateClaimed),
+          notes: l.notes,
+        })),
       }
     : null
 

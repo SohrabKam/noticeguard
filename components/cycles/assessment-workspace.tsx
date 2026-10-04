@@ -23,6 +23,7 @@ type AssessmentLine = {
   indentLevel: number
   qtyOrPctComplete: number | string | null
   valueToDate: number | string
+  claimedValueToDate: number | string | null
   previouslyCertified: number | string
   thisCycle: number | string
   notes: string | null
@@ -81,16 +82,18 @@ const COL_ITEM_REF = 0
 const COL_DESCRIPTION = 1
 const COL_CONTRACT_VALUE = 2
 const COL_QTY_PCT = 3
-const COL_VALUE_TO_DATE = 4
-const COL_PREV_CERT = 5
-const COL_THIS_CYCLE = 6
-const COL_NOTES = 7
+const COL_CLAIMED = 4
+const COL_VALUE_TO_DATE = 5
+const COL_PREV_CERT = 6
+const COL_THIS_CYCLE = 7
+const COL_NOTES = 8
 
 const COLUMNS: GridColumn[] = [
   { title: "Ref", width: 70, id: "itemRef" },
   { title: "Description", width: 300, id: "description" },
   { title: "Contract value", width: 120, id: "contractValue" },
   { title: "Qty / %", width: 80, id: "qtyOrPctComplete" },
+  { title: "Claimed", width: 120, id: "claimedValueToDate" },
   { title: "Value to date", width: 120, id: "valueToDate" },
   { title: "Prev certified", width: 120, id: "previouslyCertified" },
   { title: "This cycle", width: 120, id: "thisCycle" },
@@ -211,6 +214,15 @@ export function AssessmentWorkspace({
             displayData: pct(line.qtyOrPctComplete),
             allowOverlay: true,
             readonly: false,
+          }
+        case COL_CLAIMED:
+          return {
+            kind: GridCellKind.Text,
+            data: line.claimedValueToDate !== null ? fmt(line.claimedValueToDate) : "",
+            displayData: line.claimedValueToDate !== null ? `£${fmt(line.claimedValueToDate)}` : "—",
+            allowOverlay: false,
+            readonly: true,
+            themeOverride: theme,
           }
         case COL_VALUE_TO_DATE:
           if (isParent) {

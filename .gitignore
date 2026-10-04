@@ -53,3 +53,6 @@ next-env.d.ts
 scratch-*.mjs
 scripts/uat*.mjs
 !scripts/uat.mjs
+
+# landing page work-in-progress — parked, not ready to ship
+/marketing-wip/

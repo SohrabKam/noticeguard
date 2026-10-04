@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { computeAssessmentTotals, computeAutoSums } from "./assessment-totals"
+import { computeAssessmentTotals, computeAutoSums, computeApplicationTotal } from "./assessment-totals"
 
 describe("computeAssessmentTotals", () => {
   it("excludes parent (section) rows from the sum, using auto-summed children instead", () => {
@@ -41,5 +41,20 @@ describe("computeAssessmentTotals", () => {
     expect(sums[0]).toBe(100) // section = sum of its one item (which is itself a sum)
     const totals = computeAssessmentTotals(lines, 0)
     expect(totals.gross).toBe(100) // only the two leaf sub-items counted
+  })
+})
+
+describe("computeApplicationTotal", () => {
+  it("excludes parent rows, same adjacency-sum rule as computeAssessmentTotals", () => {
+    const lines = [
+      { indentLevel: 0, valueToDateClaimed: 999 }, // stale/unused parent value — must be ignored
+      { indentLevel: 1, valueToDateClaimed: 100 },
+      { indentLevel: 1, valueToDateClaimed: 150 },
+    ]
+    expect(computeApplicationTotal(lines)).toBe(250)
+  })
+
+  it("returns 0 for an all-parent or empty line set", () => {
+    expect(computeApplicationTotal([])).toBe(0)
   })
 })
