@@ -10,12 +10,14 @@ import {
   Settings,
   ShieldCheck,
   Users,
+  TrendingUp,
 } from "lucide-react"
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/projects", label: "Projects", icon: FolderOpen },
   { href: "/subcontracts", label: "Subcontracts", icon: FileText },
+  { href: "/forecast", label: "Cash Forecast", icon: TrendingUp },
   { href: "/compliance", label: "Compliance Docs", icon: ShieldCheck },
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/team", label: "Team", icon: Users },
