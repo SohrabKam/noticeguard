@@ -14,6 +14,8 @@ import { RetentionPanel } from "@/components/retention/retention-panel"
 import { SubcontractSettingsForm } from "@/components/subcontracts/subcontract-settings-form"
 import { UpsertDocSheet } from "@/components/compliance/upsert-doc-sheet"
 import { ScheduleEditorLoader } from "@/components/schedule/schedule-editor-loader"
+import { DrawdownTab } from "@/components/drawdown/drawdown-tab"
+import { computeDrawdown } from "@/lib/drawdown"
 import { ExtendScheduleForm } from "@/components/schedule/extend-schedule-form"
 import { AUDIT_EVENT_LABELS } from "@/lib/audit-event-labels"
 
@@ -106,6 +108,7 @@ export default async function SubcontractDetailPage({
               orderBy: { cycleNumber: "asc" },
               include: {
                 application: true,
+                assessment: true,
                 paymentNotice: { select: { status: true, servedAt: true, sumDue: true } },
                 payLessNotice: { select: { status: true, servedAt: true, sumDue: true } },
               },
@@ -124,6 +127,24 @@ export default async function SubcontractDetailPage({
   const requiredDocTypes = fullOrg?.requiredDocTypes ?? []
   const cycles = order.paymentSchedule?.cycles ?? []
   const now = new Date()
+
+  // ── Drawdown (cash forecast) ──
+  const packageValue = order.scheduleLines.reduce(
+    (sum, l) => sum + Number(l.contractValue),
+    0,
+  )
+  const drawdown = computeDrawdown({
+    packageValue,
+    retentionPct: Number(order.retentionPct) * 100, // stored as decimal, spec uses %
+    cycles: cycles.map((c) => ({
+      id: c.id,
+      cycleNumber: c.cycleNumber,
+      status: c.status,
+      finalDateForPayment: c.finalDateForPayment,
+      assessment: c.assessment,
+    })),
+    retention: order.retentionLedger,
+  })
 
   // Aggregate certified-to-date from all served notices (prefer payless over payment per cycle)
   const certifiedToDate = cycles.reduce((sum, c) => {
@@ -178,6 +199,7 @@ export default async function SubcontractDetailPage({
           <TabsTrigger value="cycles">Payment cycles ({cycles.length})</TabsTrigger>
           <TabsTrigger value="variations">Variations ({order.variations.length})</TabsTrigger>
           <TabsTrigger value="retention">Retention</TabsTrigger>
+          <TabsTrigger value="drawdown">Drawdown</TabsTrigger>
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
           <TabsTrigger value="docs">Compliance docs</TabsTrigger>
           <TabsTrigger value="audit">Audit trail</TabsTrigger>
@@ -313,6 +335,16 @@ export default async function SubcontractDetailPage({
             contractSum={Number(order.contractSum)}
             retentionPct={Number(order.retentionPct)}
           />
+        </TabsContent>
+
+        <TabsContent value="drawdown" className="mt-4">
+          {order.paymentSchedule && order.scheduleLines.length > 0 ? (
+            <DrawdownTab rows={drawdown.rows} summary={drawdown.summary} />
+          ) : (
+            <div className="rounded-lg border-2 border-dashed border-slate-200 py-16 text-center text-sm text-slate-400">
+              Set up the activity schedule and payment terms first to see the cash-out forecast.
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="schedule" className="mt-4">
