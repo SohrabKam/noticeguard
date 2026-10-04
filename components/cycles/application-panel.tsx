@@ -3,7 +3,7 @@ import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
-import { logApplication, updateApplication } from "@/lib/actions/assessments"
+import { initApplication, updateApplication } from "@/lib/actions/assessments"
 import { uploadDocument } from "@/lib/upload-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -56,7 +56,7 @@ export function ApplicationPanel({
     try {
       const formData = new FormData(e.currentTarget)
       if (attachmentUrl) formData.set("attachmentUrl", attachmentUrl)
-      await logApplication(cycleId, formData)
+      await initApplication(cycleId, formData)
       toast.success("Application logged")
       router.refresh()
     } catch (err) {
