@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <rect width="800" height="800" fill="#090D16" />
+  <g transform="translate(400, 360)">
+    <circle cx="0" cy="20" r="260" fill="#111827" stroke="#1F2937" stroke-width="8" />
+    <path d="M -120 -130 L -65 -130 L -65 150 L -120 150 Z" fill="#FFFFFF" />
+    <path d="M -65 -130 L 55 90 L 55 150 L -65 -90 Z" fill="#C81E3A" />
+    <path d="M 55 -130 L 110 -130 L 110 150 L 55 150 Z" fill="#FFFFFF" />
+    <path d="M 10 10 L 110 10 L 110 60 L 10 60 Z" fill="#C81E3A" />
+    <path d="M 10 10 L 40 10 L 40 60 L 10 60 Z" fill="#E53853" />
+    <rect x="-120" y="-170" width="230" height="16" rx="8" fill="#C81E3A" />
+  </g>
+  <text x="400" y="700" text-anchor="middle" font-family="system-ui, sans-serif" font-size="32" font-weight="700" letter-spacing="6" fill="#FFFFFF">NOTICEGUARD</text>
+</svg>

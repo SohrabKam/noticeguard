@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+  <title id="title">NoticeGuard Structural NG mark</title>
+  <desc id="desc">A structural N and G monogram built inside a crimson construction frame.</desc>
+  <rect width="800" height="800" fill="#0B1020"/>
+  <circle cx="400" cy="400" r="294" fill="#10182B" stroke="#25324A" stroke-width="8"/>
+  <path d="M238 234h324v39H277v254h-39V234Z" fill="#D82143"/>
+  <path d="M238 566h324v-39H277V273h-39v293Z" fill="#D82143" opacity=".72"/>
+  <path d="M304 292h61l111 171V292h61v216h-61L365 337v171h-61V292Z" fill="#F8FAFC"/>
+  <path d="M476 374h115v134H476v-48h59v-39h-59v-47Z" fill="#D82143"/>
+  <path d="M476 374h59v47h-59Z" fill="#EF4765"/>
+  <circle cx="592" cy="234" r="15" fill="#D82143"/>
+  <text x="400" y="660" fill="#F8FAFC" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" letter-spacing="7" text-anchor="middle">NOTICEGUARD</text>
+</svg>

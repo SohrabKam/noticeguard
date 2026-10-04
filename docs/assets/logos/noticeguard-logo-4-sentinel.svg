@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+  <title id="title">NoticeGuard Sentinel mark</title>
+  <desc id="desc">A crimson outlined shield containing a white geometric N.</desc>
+  <rect width="800" height="800" fill="#0B1020"/>
+  <circle cx="400" cy="400" r="306" fill="#10182B" stroke="#25324A" stroke-width="8"/>
+  <path d="M400 130C520 130 612 174 612 258c0 180-92 300-212 359-120-59-212-179-212-359 0-84 92-128 212-128Z" fill="#111A2D" stroke="#D82143" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M285 265h65l100 158V265h65v270h-65L350 377v158h-65V265Z" fill="#F8FAFC"/>
+  <path d="M350 265h35l100 158-35 56-100-158Z" fill="#D82143"/>
+  <path d="M400 608c51-31 93-76 122-132" fill="none" stroke="#D82143" stroke-width="11" stroke-linecap="round" opacity=".9"/>
+</svg>
