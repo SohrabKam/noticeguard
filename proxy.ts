@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   // each route handler, not a Clerk session — must bypass auth.protect()
   // here or every request gets redirected to /sign-in before it arrives.
   "/api/v1(.*)",
+  "/site-report(.*)",  // public, token-authenticated (no Clerk session needed)
 ])
 
 export const proxy = clerkMiddleware(async (auth, req) => {

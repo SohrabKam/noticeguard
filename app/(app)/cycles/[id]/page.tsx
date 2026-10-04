@@ -15,6 +15,8 @@ import { NoticePanel } from "@/components/cycles/notice-panel"
 import { MarkPaidButton } from "@/components/cycles/mark-paid-button"
 import { CloseCycleButton } from "@/components/cycles/close-cycle-button"
 import { MilestoneDateEditor } from "@/components/cycles/milestone-date-editor"
+import { SiteReportCard } from "@/components/cycles/site-report-card"
+import { getCycleSiteReport } from "@/lib/actions/site-report"
 import { AlertTriangle } from "lucide-react"
 
 export default async function CycleWorkspacePage({
@@ -87,6 +89,8 @@ export default async function CycleWorkspacePage({
     where: { paymentCycleId: id },
     orderBy: { createdAt: "desc" },
   })
+
+  const siteReport = await getCycleSiteReport(id).catch(() => null)
 
   const order = cycle.paymentSchedule.subcontractOrder
   const now = new Date()
@@ -246,6 +250,9 @@ export default async function CycleWorkspacePage({
         <DateCard label="Pay-less deadline" date={new Date(cycle.payLessDeadline)} />
         <DateCard label="Final date for payment" date={new Date(cycle.finalDateForPayment)} />
       </div>
+
+      {/* Site report card */}
+      <SiteReportCard cycleId={id} report={siteReport} />
 
       {/* Tabs */}
       <Tabs defaultValue={
