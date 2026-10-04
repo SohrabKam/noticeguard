@@ -10,6 +10,7 @@ import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AssessmentWorkspaceLoader } from "@/components/cycles/assessment-workspace-loader"
 import { ApplicationPanel } from "@/components/cycles/application-panel"
+import { ApplicationWorkspace } from "@/components/cycles/application-workspace"
 import { NoticePanel } from "@/components/cycles/notice-panel"
 import { MarkPaidButton } from "@/components/cycles/mark-paid-button"
 import { CloseCycleButton } from "@/components/cycles/close-cycle-button"
@@ -276,10 +277,30 @@ export default async function CycleWorkspacePage({
         </TabsContent>
 
         <TabsContent value="application" className="mt-4">
-          <ApplicationPanel
-            cycleId={id}
-            application={applicationForPanel}
-          />
+          {applicationForPanel ? (
+            <div className="space-y-6">
+              <ApplicationWorkspace
+                applicationId={applicationForPanel.id}
+                lines={applicationForPanel.lines ?? []}
+              />
+              <details className="group">
+                <summary className="text-xs text-slate-400 cursor-pointer hover:text-indigo-600 font-medium">
+                  Edit application details (amount, date, attachments)
+                </summary>
+                <div className="mt-3">
+                  <ApplicationPanel
+                    cycleId={id}
+                    application={applicationForPanel}
+                  />
+                </div>
+              </details>
+            </div>
+          ) : (
+            <ApplicationPanel
+              cycleId={id}
+              application={null}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="notices" className="mt-4">
