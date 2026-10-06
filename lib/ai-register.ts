@@ -84,7 +84,7 @@ export const AI_SYSTEMS: AiSystem[] = [
     purpose:
       "LLM classification of inbound subcontractor emails and attachments to the correct subcontract and payment cycle. Human must confirm before any application is logged.",
     hasMaterialImpact: true,
-    firstUsed: "TBD",
+    firstUsed: "2026-10-07",
     category: "llm-assisted",
     phase: "2",
     reviewed: false,
@@ -96,7 +96,7 @@ export const AI_SYSTEMS: AiSystem[] = [
     purpose:
       "LLM extraction of insurance certificate fields (document type, insured party, expiry date, policy number) to pre-fill compliance document records. Human must verify before saving.",
     hasMaterialImpact: true,
-    firstUsed: "TBD",
+    firstUsed: "2026-10-07",
     category: "llm-assisted",
     phase: "2",
     reviewed: false,
@@ -108,7 +108,7 @@ export const AI_SYSTEMS: AiSystem[] = [
     purpose:
       "Template-based generation of the 'basis of calculation' paragraph for statutory Payment and Pay Less Notices, populated from the assessment grid figures. Optional LLM polish pass for wording only.",
     hasMaterialImpact: true,
-    firstUsed: "TBD",
+    firstUsed: "2026-10-07",
     category: "llm-assisted",
     phase: "2",
     reviewed: false,
