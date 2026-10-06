@@ -21,6 +21,20 @@ append-only audit trail.
   applications (by email or the public API); commercial managers assess
   them line-by-line in a spreadsheet-style grid with automatic
   retention/net calculation.
+- **Assessment anomaly flags** — deterministic rules engine flags potential
+  issues before certification: deviation from prior cycles, exceeded contract
+  rates, implausible site-vs-claim mismatches, duplicate claims, and
+  uncertified variations. Shown as a dismissible banner with severity levels.
+- **Site progress reports** — shareable link per cycle (no login needed).
+  Site managers report % complete per BOQ line from their phone, attach
+  timestamp-burned photos with EXIF GPS integrity checks and duplicate
+  detection. QS sees site-reported % alongside the subbie's claim.
+- **Drawdown forecast** — per-subcontract cash-out view with forecast
+  profiles (even, front-loaded, S-curve, back-loaded), auto-redistribution
+  after certification, and MAPE tracking vs actuals.
+- **Portfolio cash forecast** — month-by-month grid across all subcontracts
+  grouped by project, with filters, CSV export, and retention release tracking.
+  The "FD view."
 - **Statutory notices** — Payment Notices and Pay Less Notices are served
   with figures frozen at serve time, emailed to subcontractors and
   recipients, and logged for delivery confirmation.
@@ -31,6 +45,13 @@ append-only audit trail.
 - **Compliance tracking** — per-subcontractor document checklists (e.g.
   Employers Liability, Public Liability, CIS Confirmation) with
   valid/expiring/expired status.
+- **Companies House watch** — checks subcontractor company status,
+  overdue accounts, and insolvency history via the public Companies
+  House API. Cached 24h.
+- **AI governance** — RICS-compliant AI systems register, risk register,
+  and dip-sampling tooling. Per-organisation data consent toggle.
+  Required under the mandatory RICS *Responsible use of AI in surveying
+  practice* standard (effective 9 March 2026).
 - **Multi-tenant by design** — every record is scoped to an
   `Organisation`, mapped 1:1 to a Clerk organisation (or a personal
   workspace for solo users), with role-based access (`VIEWER` <
