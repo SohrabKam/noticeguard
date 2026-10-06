@@ -1,0 +1,439 @@
+# NoticeGuard: Where AI Actually Helps in UK Subcontract Payment Workflows
+
+**Bottom line:** Most of what's on your A–F list is worth building, but as deterministic rules, statistics and templates, not as ML. The places where an LLM genuinely earns its keep are at the edges of the workflow: inbound email and attachment triage, reading compliance documents, contract setup with verification, and (later) PDF application intake. Don't build computer-vision % estimation, learned per-subcontractor forecasts, or an adjudication-risk model. A single SME or mid-tier contractor's data can't support them, and the liability and RICS-compliance costs outweigh what they'd add.
+
+## TL;DR
+
+- **Build now, as rules:** A (anomaly flags), B (trade or programme-linked profiles instead of learned curves), E (photo evidence-integrity checks, not % estimation) and F (descriptive lateness and dispute indicators, plus a Companies House watch). None of these needs ML, and keeping them deterministic keeps them outside the RICS AI standard's heaviest obligations.
+- **Build with an LLM, human-verified:** inbound email triage (G), compliance-document reading (G), and contract-term extraction at setup (D, later). For C, steer subcontractors to a portal first and treat PDF extraction as a fallback with arithmetic reconciliation. Your "~70% on handwritten" figure comes from a single vendor blog test of 35 US documents, not from independent research.
+- **Context corrections:** the RICS 45%/1% figures are global, not UK, and are now out of date. The RICS 2026 report (18 August 2026) found that around two-thirds of construction respondents now use AI in some capacity, up from just over half in 2025. The RICS standard does not require a single "named accountable surveyor" for all AI use; it requires a named surveyor to sign written reliability decisions on outputs. The Commercial Payments Bill (retention ban, 60-day cap on the final date for payment) changes what retention and contract-compliance features you need.
+
+## Ranked summary
+
+| Rank | Feature | Verdict | Value to QS | Feasibility | Risk | Data needed |
+|---|---|---|---|---|---|---|
+| 1 | G: Inbound email/attachment triage to subcontract and cycle, with logged receipt time | Build now (LLM classification + human confirm) | High: a missed application is the main smash-and-grab trigger | High | Low if it only suggests | None historical; works from day one |
+| 2 | A: Assessment anomaly flags | Build now as rules, not ML | Medium–high | High | Low | Current claim, prior certified, site %, contract rate (already held) |
+| 3 | G: Payment/pay less notice "basis of calculation" generated from the assessment grid | Build now as a template; LLM wording optional, with sign-off | High | High | Medium (notice validity) | None |
+| 4 | F: Lateness/dispute leading indicators + insolvency watch | Build now as descriptive stats + Companies House/credit integration | Medium–high | High | Low | A few cycles per subcontractor; public registers |
+| 5 | E: Photo evidence-integrity checks | Build now (EXIF, geofence, duplicate hashing); don't build % estimation | Medium | High | Low | None |
+| 6 | B: Forecast profiles | Rules-not-ML: profile templates + programme dates | Medium | High | Low | Package start/end dates |
+| 7 | G: Compliance document reading (insurance certificates, accreditation expiry) | Build soon (LLM extract + confirm) | Medium | High | Low–medium | None |
+| 8 | G: Variation/CE register matched to application lines | Build later (rules first, LLM matching second) | High | Medium | Medium | Variation register |
+| 9 | D: Contract payment-term extraction + Construction Act compliance check | Build later; extract-then-verify only | Medium (one-off per subcontract) | Medium | Medium–high | None, but needs a test set of real amended subcontracts |
+| 10 | C: PDF application extraction | Build later, as fallback behind a portal | Medium | Medium | Medium | Sample of real UK applications to validate |
+| 11 | G: Natural-language portfolio/audit query | Build later (read-only text-to-SQL, query shown) | Medium | High | Low | Your schema |
+| — | E: CV % complete; F: ML adjudication prediction; B: learned per-sub curves | Don't build | Low | Low | High | Far more than any SME contractor has |
+
+## Context checks: confirmations and corrections
+
+**RICS standard.** Confirmed: *Responsible use of artificial intelligence in surveying practice* was published in September 2025 and took effect on 9 March 2026.\[1\]\[2\] Your summary needs sharpening in four places:
+
+- **Material impact.** The standard applies only to AI outputs that have a "material impact" on the surveying service. Members must record their determination on materiality and the reasoning behind it.\[2\]
+- **AI register.** Firms must keep a written register of every AI system with material impact, recording its purpose, when it was first used and when it will next be reviewed. Firms also need a separate risk register with RAG ratings, reviewed at least quarterly.\[2\]
+- **Named surveyor.** A named, appropriately qualified surveyor who accepts responsibility must prepare or supervise each written reliability decision on an output. For automated or high-volume outputs, per-output written decisions are "neither necessary nor proportionate". Instead the firm must run randomised dip samples at regular intervals.\[2\]
+- **Client disclosure.** Disclosure must be in writing and in advance, and the terms of engagement must cover when AI is used, the extent of PI cover for AI (if available), how to contest its use, redress and opt-out.\[2\]
+
+Two items you missed matter more for NoticeGuard:
+
+- **Supplier due diligence.** Firms must send suppliers written due-diligence requests covering environmental impact, training data, data-law compliance and "the type and extent of the liability of the third-party provider".\[2\]
+- **Data governance.** Firms must refrain from uploading private and confidential data to AI systems unless affected stakeholders have given express written consent in advance.\[2\] Subcontractor applications and subcontracts are commercially confidential, so this hits C and D directly.
+
+**Adoption figures.** The 45% / 1% figures are real, but they come from RICS *AI in Construction 2025*: 2,200+ respondents worldwide, not UK-only.\[3\]\[4\] They are now superseded. The RICS *AI in commercial property and construction report 2026* (18 August 2026) drew on 1,883 construction responses.\[5\] It found:
+
+- around two-thirds of construction respondents now use AI in some capacity, up from just over half in 2025, with 39% running early-stage pilots (LexisNexis's summary of the report also notes 26% hadn't heard of the RICS AI standard and 43% aren't aligned with it);
+- "no AI use" fell by over a third;\[5\]
+- regular use in specific processes rose from 12% to 19%;\[5\]
+- full organisation-wide integration is under 1%;\[5\]
+- the UK saw the largest regional fall in "no AI use" (17%) and regular use almost doubled, but the UK remains the most cautious region: 35% have no plans to invest (down from 44%) and only 5% expect a significant increase;\[5\]
+- privacy and security concerns rose from 22% to 30%.\[5\]
+
+Read this as: tool use (largely bundled chatbots) is mainstream, but embedded workflow AI is rare, and UK buyers remain the most conservative.
+
+**Extraction figures.** See C. The "~70%" figure is a vendor's derived number, not a measured independent benchmark.
+
+## A: Assessment anomaly flags
+
+**Verdict: build now, as rules. Don't use an LLM to explain the flags.**
+
+Each check you describe is a deterministic comparison:
+
+- cumulative % jump over a threshold;
+- claimed % greater than site-reported %;
+- claimed % over 100;
+- claimed rate ≠ contract rate;
+- quantity × rate ≠ line total;
+- cumulative claimed going backwards;
+- the subcontractor's "previous certified" ≠ your record of previous certified;
+- claimed variations not on the variation register.
+
+A rule produces its own explanation ("B.2: claimed 95%, site 60%, prior certified 55%"), and that's more trustworthy than prose. An LLM-written rationale adds a hallucination surface to a document trail that may end up in an adjudication bundle, without adding information. If you want something statistical later, a per-line or per-trade outlier score against the contractor's own history (e.g. % movement per cycle versus that trade's distribution) is enough. That's statistics, not ML.
+
+**Would QSs notice anyway?** On a 20-line package, mostly yes. On a 300-line M&E package at month-end with 30 applications landing, no. That's where the value is. The best practitioner evidence is indirect. In a Capterra review of Payapps, a QS complains that the tool's BoQ and variation handling is "very clunky... if you're an 'advanced QS' you'll find yourself doing Excel assessments, fudging the same into PayApps and pasting the comment 'see attached spreadsheet' an awful lot."\[6\] QSs still assess in Excel because portals don't support how they actually assess. Flags that live inside a grid that's as fast as Excel are more valuable than smarter flags in a clunky one.
+
+**Vendor reality:** I found no evidence that Payapps, Causeway, COINS, Archdesk or Xpedeon ship cross-checks against site-reported progress. Payapps enforces claims against an agreed breakdown (which prevents some over-claims structurally).\[7\] CausewayOne markets AI that "flags margin risk early" in trading workflows, but that sits at finance and AP level, not line-level assessment.\[8\] Your site-% input is a genuine differentiator, because the incumbents don't hold that data.
+
+**Error frequency and cost:** No UK data quantifies over-certification errors. The proxies are:
+
+- KCL/Adjudication Society 2024: "exaggerated claims" cited as a leading cause of disputes by 30% of respondents;\[9\]
+- Payapps' (vendor) survey of 127 UK subcontractor staff: 22% of applications often or always need corrections.\[10\]
+
+Treat both as indicative only.
+
+**Alert fatigue:** The automation literature is clear that constant, unvarying alerts degrade vigilance. Keep the rule set small, let each contractor set thresholds per trade, and log overrides with a reason. That log is also good adjudication evidence that the assessment was considered.
+
+**Liability:** Low. Flags inform; the QS certifies.
+
+## B: Cash forecast refinement
+
+**Verdict: rules-not-ML. Offer profile templates and link them to programme dates. Don't learn per-subcontractor curves.**
+
+RICS practice information *Cash flow forecasting* (2nd edition, July 2024) describes the DHSS expenditure model (Hudson) as the standard S-curve approach. It notes that building a forecast bottom-up from a detailed programme "can be very time consuming and the accuracy is often no better than using an industry S-curve formula."\[11\] Skitmore's test of the DHSS formula on 27 completed projects found that alternative models and extra variables produced no significant improvement over the standard formula.\[12\] The wider literature agrees that standard curves are inaccurate project-by-project because projects are idiographic.\[13\] The implication is that sophistication doesn't buy much accuracy. What buys accuracy is getting **timing** right: when each package starts and finishes.
+
+**Practical design:**
+
+- At setup, pick a profile per package: even, front-loaded, back-loaded, or DHSS-style S-curve.
+- Suggest a default by trade: groundworks and frame front-loaded, M&E mid-to-back with a long commissioning tail, finishes late. These trade shapes are practitioner convention, not something I found validated in UK data.
+- Anchor each profile to package start and end dates from the programme.
+- Keep your self-correcting redistribution after each certification. That's the strongest feature you already have.
+
+**Why not ML:** Rough estimate, which is my inference and needs validating: an SME or mid-tier contractor running 10–30 live projects with 15–40 packages each generates perhaps a few hundred completed subcontract drawdown histories over several years. They span dozens of trades, and the projects differ. That isn't enough to learn per-subcontractor curves that beat a trade template plus correct dates. Academic ML forecasting wins come from pooled, cleaned datasets that a single contractor doesn't have. I found no vendor (Procore, Autodesk, nPlan, Kreo, Briq) publishing validated accuracy for subcontract-level cash forecasting in the UK. nPlan's strength is schedule-risk forecasting trained on very large programme datasets, which is a different problem.
+
+**What would actually help:** a variance view that shows forecast against certified per package each month, so the commercial manager sees which packages are drifting. That feeds CVR reporting, which is the commercial team's real monthly output.
+
+## C: Subcontractor application extraction
+
+**Verdict: build later, behind a portal-first strategy, as pre-fill with reconciliation. Never use it as an unchecked source of figures.**
+
+**The "95–99% / ~70%" figures.** The only source I could find for the construction-specific "~70%" is an ImageToTable.ai blog post (11 September 2026). It tested 8 tools on 35 US documents (AIA G702/G703 pay applications, invoices, timesheets, delivery notes). On printed documents most tools scored 92–98% field-level accuracy; on handwritten content, 55–91%.\[14\] The ~70% is the blog's *derived* "effective accuracy" for a mix that is 70% handwritten. The author ranks its own product first.\[14\] So:
+
+- it's directionally plausible;
+- it isn't independent;
+- it isn't UK valuations;
+- it isn't a measured 70%.
+
+Independent invoice benchmarks give a better baseline:
+
+- Fraunhofer IAIS/Lamarr (2025, as reported by Parseur): the best multimodal model scored 96.50% on clean digital invoices, 92.71% on scanned invoices and 87.46% on scanned receipts.\[15\]
+- BusinesswareTech's 2026 IDP benchmark: Gemini 3 Pro 94.75%, Azure Document Intelligence 90.52%, GPT-5.2 87.59%.\[16\]
+- Line items are consistently worse than header fields. BusinesswareTech's January 2025 benchmark of scanned invoices scored Google Document AI at 40% on line-item detection (Textract 82%), despite about 82% field accuracy.
+
+UK valuations are line-item-heavy, so the line-item number is the one that matters.
+
+**Does human review just move the bottleneck?** It depends on whether the reviewer can verify **cheaply**. Automation-bias research is the warning. In Parasuraman & Manzey's review, operators detected 82% of automation failures when reliability varied but only 33% when it was constantly high.\[17\] An auditing study found 44.4% of participants missed errors in an automated count, against 21.9% when the same count was presented as human-prepared.\[18\] Good extraction makes reviewers worse at catching the rare error.\[19\] The fix is to make the machine check itself arithmetically:
+
+- the line totals must sum to the application total;
+- this period = cumulative − previous cumulative;
+- the subcontractor's "previous" must match your last certified figure;
+- rate × quantity must equal the line value.
+
+When every check passes, the residual risk is low. When one fails, the system shows the source crop side-by-side and makes the reviewer type the value instead of clicking accept. That combination of exception-only review, source highlighting and forced re-keying on failure is how you get net time savings.
+
+**Where the liability actually sits** (my inference, not legal advice):
+
+- **The payer's own notice figure is protected.** Your customer's payment or pay less notice states the sum *the payer* considers due, built from the QS's certified column, not the subcontractor's claimed column. A misread "claimed" figure doesn't flow into the notice unless the QS certifies the claim blind. A valid notice with a wrong-but-honest figure is still a valid notice: the payer pays what it stated, and either side can run a true-value adjudication.
+- **The real statutory exposure is a missed or mis-dated application.** If no valid payment or pay less notice is served, the application becomes the notified sum.\[20\] That's how VMA recovered £106,434.88 by smash and grab against POL in 2025.\[21\] Under *S&T v Grove* [2018] EWCA Civ 2448, the payer must pay the notified sum before it can pursue a true-value adjudication.
+
+This is why intake and triage (G1) matter more than extraction accuracy.
+
+**Sidestep option:** Payapps, Procore and Xpedeon all route subcontractors through a portal to claim against the contract breakdown, which removes extraction entirely.\[7\]\[22\]\[23\]\[24\] The cost is adoption. Payapps' own Capterra reviews include "not well received by subcontractors", "the initial conversation with Subcontractors... can be difficult", and "we get a lot of kick-back from subcontractors about the cost per claim".\[25\]\[26\]\[27\] Payapps' UK pricing charges subcontractors from £32 a month (Basic, one contract) or £35 per application, though the first application each month on self-managed contracts is free. A **free** subcontractor portal, plus extraction as a fallback for the long tail who won't use it, is a stronger position than either alone.
+
+**RICS:** extraction relied on for certification is likely "material impact". The firm then needs a register entry, dip sampling, and attention to the confidential-data consent rule.\[2\] Process documents through enterprise endpoints that don't train on customer data, and say so in your supplier due-diligence pack.
+
+## D: Contract clause extraction at setup
+
+**Verdict: build later. Extract with clause citations, require a human to confirm every field, then run deterministic Construction Act compliance checks on the confirmed values.**
+
+**Evidence on reliability:**
+
+- *ContractEval* (NLLP 2025): 19 LLMs tested on CUAD's 41 clause categories. The best scores (GPT-4.1 and 4.1-mini) were F1 ≈ 0.64.\[28\]
+- The 2026 *CLAUSE* benchmark: models are much weaker at spotting legal discrepancies and omissions, with GPT-4o-mini at 31% F1 and LLaMa-3.3 at 9.3% on harder categories.\[29\]
+- Vendor benchmarks claim more (Sirion reports 94.2% for its own agent), but they're self-published.\[30\]
+- CUAD is US commercial contracts.\[31\] I found no published benchmark on JCT, NEC or bespoke UK subcontracts, or on schedules of amendments.
+
+**Construction-specific failure modes** (inferred from how these documents are built, not tested):
+
+- the standard form says one thing and a schedule of amendments overrides it;
+- the subcontract incorporates main-contract terms by reference;
+- the payment timetable sits in an appendix or spreadsheet;
+- the hierarchy of documents is set by a priority clause;
+- the model "reads" the standard JCT default instead of the amended term.
+
+These are exactly the omission and precedence errors where LLMs score worst.
+
+**The good news:** you need only about 8–10 fields:
+
+- application dates;
+- due date;
+- final date for payment;
+- payment notice window;
+- pay less notice window;
+- retention % and release triggers;
+- any retention cap or tiering;
+- payment period;
+- adjudication or Scheme fallback.
+
+So build it as "LLM proposes, cites the clause and page, QS confirms each field". Then the **compliance flags become rules over confirmed fields** rather than LLM judgements:
+
+- pay-when-paid is ineffective except on upstream insolvency (s.113);\[20\]
+- an inadequate payment mechanism falls back to the Scheme;
+- under the Commercial Payments Bill as drafted, a final date for payment more than 60 days after the due date (30 for public bodies) would be void.\[32\]
+
+This is where the value is. The QS saves 10 minutes of typing, and gets a "this term is non-compliant / falls back to the Scheme" warning that most SME QSs would otherwise miss.
+
+**Existing tools:** generic contract AI (Luminance, Robin AI, Spellbook) and UK construction entrants such as LazyQS (which flags "unfair payment terms" for subcontractors) and Gather (an "AI QS agent" for NEC4/JCT time bars) exist.\[33\]\[34\] All of this is vendor marketing; none is independently evaluated. No main-contractor tool I found turns extracted terms into a live notice-deadline engine.
+
+**RICS:** summarising documents that are then relied on is the standard's own example of material impact, so the full obligations apply.\[2\]
+
+## E: Site photo analysis
+
+**Verdict: don't build % estimation. Build evidence-integrity checks now.**
+
+OpenSpace and Buildots are not lightweight:
+
+- OpenSpace Track works from 360° captures (BIM optional) and claims "95% verified accuracy" only through a **human-in-the-loop verification process**.\[35\]
+- Buildots relies on hard-hat 360° cameras walked on a regular cadence and compares captures against the BIM model and schedule.\[36\]
+
+If the market leaders need structured 360° capture plus human verifiers to reach 95%, ad-hoc phone photos will not give a defensible "steel frame ~70%" figure. A wrong % estimate is worse than none in an adjudication.
+
+**The realistic lightweight version is deterministic:**
+
+- is there a photo for each line claimed above X%;
+- was it taken during this cycle (EXIF and server timestamp);
+- was it taken inside the site geofence;
+- is it a perceptual-hash duplicate of a previous cycle's or another line's photo.
+
+A vision-language "does this plausibly show drylining?" check is cheap to add later, but it adds little over site manager attestation. Timestamped, location-stamped photos linked to the BOQ line and the cycle are strong contemporaneous evidence in adjudication, especially where inadequate contract administration is the leading cause of disputes.\[37\] Their value comes from integrity and linkage, not from AI.
+
+## F: Smart deadline / risk prediction
+
+**Verdict: rules-not-ML. Show descriptive indicators. Don't build an adjudication predictor. Treat insolvency risk as the higher-value target, delivered by integration.**
+
+You're right that the hourly sweep already catches deadlines. Prediction of *late submission* adds little, because a late application simply moves the timetable.
+
+**Adjudication data:** KCL/Adjudication Society's 2024 report recorded a record 2,264 referrals in a year across the whole UK industry.\[38\]\[39\] The leading causes were:
+
+- inadequate contract administration (50%);\[9\]
+- lack of competence (42%);\[9\]
+- exaggerated claims (30%);\[9\]
+- client changes (30%).\[9\]
+
+The most common subjects are extensions of time, final accounts, interim payments and variations.\[40\] Spread over thousands of contractors, a single SME sees perhaps zero to a handful of adjudications a year (inference). That's nowhere near enough positive examples to train anything.
+
+**Leading indicators that come straight from your data:**
+
+- claimed-vs-certified gap ratio, and its trend per subcontractor;
+- growing unagreed variations;
+- repeated pay less notices on the same subcontract;
+- notices issued close to the deadline ("near-misses");
+- disputes over the subcontractor's "previous certified" figure;
+- subcontractor lateness history.
+
+These are explainable and work from the first few cycles. A model would not beat them at this data volume.
+
+**Insolvency:** Insolvency Service figures reported by BCIS show 3,866 construction company insolvencies in England and Wales in the 12 months to August 2026, the highest of any sector, and subcontractor failure costs a main contractor more than an adjudication does. You can pull free signals from the Companies House API:
+
+- overdue accounts;
+- director changes;
+- new charges;
+- registered office moves.
+
+Pair them with behavioural signals from your own data, such as sudden front-loading, claims running ahead of site progress, or requests for early payment. For credit scores, partner rather than build: Creditsafe, Red Flag Alert and Constructionline-type services already sell this. I didn't verify their APIs or pricing in this research.
+
+## G: What's missing (ranked)
+
+1. **Inbound email and attachment triage.** Classify each email (application, variation, compliance document, query), match it to the subcontract and cycle, and log the receipt timestamp immutably. This is an LLM classification task with human confirmation, and it directly reduces the highest-liability failure (an unnoticed application). Build first.
+2. **Notice "basis of calculation" generation.** Generate it from the line-by-line grid. Courts look for clarity: in *Placefirst v CAR* [2025] EWHC 100 (TCC), the court upheld a pay less notice served alongside the payment certificate and would not strive to invalidate a notice that makes clear what is held and why.\[41\] In *1st Formations v LAPP* [2025] EWHC 1526 (TCC) the court took a commonsense approach to validity.\[42\] A deterministic template does most of the work. LLM drafting of deduction reasons (contra-charges, defects) is optional and must be signed off. Under RICS it's likely "composing significant parts of an opinion".\[2\]
+3. **Compliance document reading.** Extract expiry dates, cover levels and named insured from insurance certificates and accreditation documents for the QS to confirm. CIS verification should go through HMRC's deterministic API, not AI.
+4. **Variation/CE register matched to application lines.** Variations are a top adjudication subject, and Payapps users ask for variations to be logged "before they are claimed".\[40\]\[43\] Start with rules (an unregistered variation claimed = flag); add LLM-assisted matching of email instructions to the register later.
+5. **Adjudication evidence pack.** A one-click chronological export of the application, receipt timestamp, assessment, notices, photos and correspondence for a cycle. Deterministic, and high value when it's needed.
+6. **Natural-language portfolio query** ("uncertified applications older than 10 days"). Read-only text-to-SQL that displays the query, so it's low risk. Useful, but mostly a demo feature for commercial directors.
+7. **Retention tracking and release triggers.** Deterministic. The retention ban's two-year transition and three-year "last retention day" mean existing retentions will need tracking until around 2030,\[44\]\[45\] and after that the feature declines.
+8. **Contra-charge and set-off evidence packs; final account preparation.** Later.
+9. **CIS / domestic reverse charge VAT.** Leave it to the accounting integration; don't build it.
+
+**What not to hand to AI:** I found no UK forum threads to quote here. My search didn't surface usable r/QuantitySurveying content, so this needs practitioner input. The defensible position, consistent with the RICS standard's emphasis on professional judgement, is:
+
+- the valuation judgement itself;
+- the decision to issue and serve a statutory notice;
+- deadline calculation, which must stay deterministic and auditable;
+- set-off and contra-charge decisions.
+
+The most telling user voice I found argues for *less*: "I'd be happy with it if it was an application portal with reminders, a basic payment notice front page, a sign-off circulation function and an attachment space; that would be plenty."\[43\]
+
+## Vendor and competitor landscape
+
+- **Payapps (Autodesk; acquired 20 February 2024 for $387 million in cash, per Autodesk's 10-K).** Your closest direct competitor. It has:
+  - a subcontractor portal claiming against an agreed breakdown;\[46\]
+  - Construction Act deadline reminders for payment and pay less notices;\[47\]
+  - payment notice and certificate documents;\[48\]
+  - compliance verification before a claim can be submitted;\[46\]
+  - ERP integration.\[49\]
+  
+  It claims to cut assessment and certification time "by up to 50%".\[46\] I found no live AI features. User complaints: clunky for complex packages, subcontractor resistance and per-claim cost.\[6\]\[25\]\[50\] Its 2026 UK survey (127 subcontractor respondents) reports 79% almost always paid late and 73% in routine disputes.\[10\] That's vendor research, but useful as messaging.
+- **Causeway.** CausewayOne is marketed as "AI-first", with AI capabilities "now live" in Trading (AP/AR) and claims of "up to 70% efficiency gains".\[8\]\[51\] These are finance-side features; I found no line-level assessment AI.
+- **Procore.** Procore Assist, Insights and Agents provide search, summaries and risk flagging. Secondary sources say it lacks native AI OCR line-item extraction for invoices.\[52\] Paper applications are keyed in "on behalf of" the subcontractor.\[24\] UK presence is mainly at larger contractors.
+- **Xpedeon.** A supply chain portal for applications that can "auto-generate payment notices".\[23\] No AI found.
+- **Archdesk.** Valuations, pay less workflows and retention tracking in a mid-market ERP.\[53\] Its AI messaging is "AI-ready data", not shipped features.\[54\]
+- **COINS (Access)** and **Eque2/Sage.** ERP-centred subcontract ledgers and CIS. I didn't verify AI features.
+- **C-Link.** Now positioned on tendering and procurement, with "AI-Driven Tender Analysis".\[55\] Not a payment-notice competitor.
+- **New UK entrants to watch.** All claims are their own marketing:
+  - **Site Samurai:** claims payment, pay less and payee notice generation with s.111 deadline tracking, at published prices of £99/£199/£699 a month.\[56\] It is the most direct like-for-like competitor in the SME segment.
+  - **Construction AI:** payment-cycle tracking and notice alerts.\[57\]
+  - **Gather:** AI QS agent for time bars.\[34\]
+  - **LazyQS:** subcontractor-side contract risk.\[33\]
+- **Not researched:** Buildots, OpenSpace, Sablono, Kreo, Disperse and Doxel are progress or estimating tools, not payment competitors.
+
+**The gap:** nobody combines site-reported % per BOQ line with the payment assessment and notice engine, and nobody serves SME contractors with a free subcontractor portal.
+
+## RICS AI standard: feature-by-feature implications
+
+The standard binds RICS members and RICS-regulated firms.\[2\] Many SME main contractors aren't regulated firms, but their MRICS QSs are bound individually. How "client disclosure" applies to an in-house contractor QS (whose "client" is effectively their employer) is unclear. Ask practitioners.
+
+The glossary uses the OECD definition of an AI system (a system that *infers* how to generate outputs).\[2\] That arguably puts fixed thresholds, formulas and hashing outside the definition. This is my reading; RICS supporting information may say otherwise.
+
+| Feature | Counts as AI? | Material impact? | What the customer's QS/firm must do |
+|---|---|---|---|
+| A rules | Likely no | n/a | Nothing beyond normal practice |
+| A LLM explanations | Yes | Possibly | Register, dip samples. Another reason to skip it. |
+| B templates | No | n/a | Nothing |
+| C extraction | Yes | Likely yes, if relied on | Register entry, risk register, supplier due diligence, dip sampling, confidential-data consent, disclosure |
+| D extraction | Yes | Yes (summarising documents relied on is RICS's own example) | Full set + written reliability decision at setup |
+| E integrity checks | No (hashing/EXIF) | n/a | Nothing; a VLM plausibility check would be AI |
+| F descriptive stats | No | n/a | Nothing; an ML model would be AI |
+| G email triage | Yes | Arguably no (routing, human confirms) | Record the materiality determination |
+| G LLM notice wording | Yes | Yes | Full set; named surveyor signs off |
+
+**Product implication:** make AI features individually switchable and off by default. Label each one "AI / not AI" in the UI. Ship the compliance artefacts:
+
+- auto-populated register entries (system, purpose, first-use date, review date);
+- a randomised dip-sample queue with a sign-off log;
+- a pre-written supplier due-diligence response covering every item in clause 4.1, including your liability position;
+- draft disclosure wording.
+
+This turns a burden into a selling point, and it means the deterministic core sells to the most cautious buyers without triggering the standard at all. I found no evidence on UK PI insurers' positions on AI in QS work. That's a gap worth asking brokers or RICS about.
+
+## Regulatory context that changes the roadmap
+
+- **Commercial Payments Bill [HL].**
+  - Progress: introduced 19 May 2026; unopposed second reading 9 June; committee 21 July; report stage reportedly from 15 September; Commons stages to follow.\[58\]
+  - As drafted it bans retentions after a two-year transition, with a "last retention day" three years from commencement.\[44\]
+  - It caps the final date for payment at 30 days (public) or 60 days (private) after the due date, with longer terms void.\[32\]
+  - It fixes late-payment interest at 8% above base.\[32\]
+  
+  The government's 24 March 2026 response reported 87% of 867 responses favouring retention reform.\[59\] The Construction Leadership Council estimates £223m of retentions is lost to insolvency each year.\[60\] Implications for you:
+  - add a payment-term compliance check (D);
+  - add statutory interest calculation;
+  - keep retention tracking, but don't over-invest in it.
+- **Small Business Commissioner** powers to investigate, adjudicate and fine persistent late payers.\[61\] These raise the value of a clean payment audit trail for main contractors.
+- **Building Safety Act** gateway documentation is driving UK interest in compliance AI (RICS 2026), but it sits mostly outside payment workflows.\[5\]
+
+## Recommended sequencing
+
+**Ship first (deterministic core plus one LLM edge):**
+
+- A rule flags;
+- E integrity checks;
+- B profile templates linked to programme dates;
+- notice basis-of-calculation templates;
+- F indicators plus a Companies House watch;
+- email triage with immutable receipt logging.
+
+**Validate with users before building:**
+
+- a free subcontractor portal (will SME subcontractors use it?);
+- compliance-document extraction;
+- the variation register.
+
+**Build later, only with a real test set:**
+
+- C PDF extraction, behind arithmetic reconciliation;
+- D contract-term extraction, with clause citations and compliance rules.
+
+Collect 50–100 real UK applications and 20–30 amended subcontracts from design partners, and publish your own field-level accuracy.
+
+**Don't build:** CV % estimation, ML adjudication prediction, or learned per-subcontractor curves.
+
+## Questions only practitioners can answer
+
+Use these instead of the generic A–G prompts:
+
+1. What share of your subcontract applications arrive as handwritten or annotated PDFs versus spreadsheets versus portal submissions, and for which trades?
+2. Have you ever missed or mis-dated an application received by email? What happened?
+3. For a 200+ line package, how long does assessment take, and which checks do you do manually every month?
+4. Would you use a forecast profile chosen per trade at setup, and do you have package dates from the programme at subcontract award?
+5. If NoticeGuard drafted the basis-of-calculation wording for a pay less notice from your grid, what would you need to see before signing it?
+6. Do you treat AI tools as "material impact" under the RICS standard, who in your firm owns the AI register, and has your PI insurer asked about AI use?
+7. Would your subcontractors use a free portal? Which ones refused Payapps or similar, and why?
+8. Which subcontractor-failure warning signs have you seen in hindsight (front-loading, early-payment requests, director changes)?
+
+## Caveats
+
+- **Thin practitioner evidence.** First-hand UK practitioner voices are sparse in this research: I found no usable Reddit or RICS/CIOB forum threads. The user quotes are Capterra reviews of Payapps, mostly from Australian users.
+- **Vendor-sourced figures.** Vendor accuracy and efficiency figures (Payapps 50%, Causeway 70%, OpenSpace 95%, Sirion 94.2%, ImageToTable's ~70%) are self-reported.
+- **My own estimates.** Data-volume estimates for SME contractors, the trade-profile shapes, and the liability reading of extraction errors are my inferences, not sourced findings. None of this is legal advice. Have a construction solicitor review the notice templates.
+- **Unverified items.** I did not verify Red Flag Alert, Creditsafe, Constructionline, Builder's Profile or CHAS capabilities, COINS or Eque2 AI features, or UK PI insurer positions.
+
+## Sources
+
+1. [AAE - RICS Brings First Global AI Standard for Surveyors into Effect](https://www.associationexecutives.org/resource/rics-brings-first-global-ai-standard-for-surveyors-into-effect.html)
+2. <https://www.rics.org/content/dam/ricsglobal/documents/standards/Responsible-use-of-artificial-intelligence-in-surveying-practice_September-2025.pdf>
+3. [RICS publishes AI in Construction 2025 report](https://www.lexisnexis.co.uk/legal/news/rics-publishes-ai-in-construction-2025-report)
+4. [Global Survey Reveals Potential and Challenges of AI in the Construction Sector](https://www.stoneworld.com/articles/95072-global-survey-reveals-potential-and-challenges-of-ai-in-the-construction-sector)
+5. [AI in commercial property and construction report 2026](https://www.rics.org/news-insights/ai-in-commercial-property-and-construction-report-2026)
+6. [Payapps Software Pricing, Alternatives & More 2026](https://www.capterra.com/p/238884/Payapps/)
+7. [Helping construction companies automate payment and compliance workflows - Payapps](https://www.payapps.com/company-products-news-nz/helping-construction-companies-automate-payment-and-compliance-workflows-2/)
+8. [Register](https://campaign.causeway.com/ai-for-causwayone-trading)
+9. [Construction Dispute Statistics UK 2026](https://www.gatherinsights.com/en/construction-dispute-statistics-uk)
+10. [Subcontractors blacklisting contractors who don’t pay, survey finds - Construction Management](https://constructionmanagement.co.uk/subcontractors-blacklisting-contractors-who-dont-pay-survey-finds/)
+11. [Cash flow forecasting RICS PRACTICE INFORMATION UK 2nd edition, July 2024](https://www.rics.org/content/dam/ricsglobal/documents/surveying/Cash-flow-forecasting-2nd-edition.pdf)
+12. [COVER SHEET Skitmore, Martin, R. (1992) Parameter prediction for cash flow](https://eprints.qut.edu.au/4409/1/4409.pdf)
+13. [Forecasting cash flow expenditure at pre-tender stage](https://www.irbnet.de/daten/iconda/CIB_DC27661.pdf)
+14. [Best Document Extraction Tools for Construction in 2026: 8 Tested](https://imagetotable.ai/blog/best-document-extraction-software-construction-2026)
+15. [AI Invoice Processing Benchmarks 2026](https://parseur.com/blog/ai-invoice-processing-benchmarks)
+16. [Intelligent Document Processing (IDP) Models Benchmark](https://www.businesswaretech.com/intelligent-document-processing-benchmark)
+17. [(PDF) Complacency and Bias in Human Use of Automation: An Attentional Integration](https://www.researchgate.net/publication/47792928_Complacency_and_Bias_in_Human_Use_of_Automation_An_Attentional_Integration)
+18. [Automation Bias in Public Sector Decision Making](https://www.diva-portal.org/smash/get/diva2:1870243/FULLTEXT01.pdf)
+19. [Human-in-the-Loop Artificial Intelligence: A Systematic Review of Concepts, Methods, and Applications - PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC13114286/)
+20. [An in-depth look at applications for payment in construction](https://www.payapps.com/eguides-uk/applications-for-payment-an-in-depth-look-at-applications-for-payment-in-construction-uk/)
+21. [Enforcing Adjudicator’s Decisions in Smash-and-Grab Claims - ATB Legal](https://atblegal.com/blog/enforcing-adjudicators-decisions-in-smash-and-grab-claims/)
+22. [Gtek: Streamlining applications for payment with Payapps to gain a competitive edge](https://www.payapps.com/case-studies-uk/gtek-submitting-applications-for-payment-through-payapps-for-a-competitive-advantage/)
+23. [Subcontractor Management Software](https://xpedeon.com/subcontractor-management-software/)
+24. [Create a Subcontractor Payment application on Behalf of a Payment Application Contact - Procore](https://en-gb.support.procore.com/products/online/user-guide/project-level/invoicing/tutorials/create-an-invoice-on-behalf-of-an-invoice-contact)
+25. [Payapps Reviews 2026. Verified Reviews, Pros & Cons](https://www.capterra.com/p/238884/Payapps/reviews/)
+26. [Payapps Price, Reviews & Ratings - Capterra Israel 2026](https://www.capterra.co.il/software/1021209/payapps)
+27. [Payapps 2026 Pricing, Features, Reviews & Alternatives](https://www.getapp.com/operations-management-software/a/payapps/)
+28. [ContractEval: Benchmarking LLMs for Clause-Level Legal Risk Identification in Commercial Contracts](https://arxiv.org/html/2508.03080)
+29. [CLAUSE: A Discrepancy Benchmark for Auditing LLMs ...](https://aclanthology.org/2026.findings-eacl.305.pdf)
+30. [2026 Clause-Extraction Accuracy Benchmark: Sirion vs Open-Source LLMs](https://www.sirion.ai/library/contract-insights/clause-extraction-benchmark-sirion-vs-llms/)
+31. [How We Benchmark Extract on CUAD - by Soham Chatterje](https://tinyml.substack.com/p/benchmarking-scaledowns-extraction)
+32. [Commercial Payments Bill would ban retention and late payments in UK construction - Lexology](https://www.lexology.com/library/detail.aspx?g=e402dc5a-14b7-46b6-8dca-f4c9f5e22d32)
+33. [AI Tender Pack Review Software for UK Subcontractors](https://www.lazyqs.co.uk/tender-pack-review)
+34. [QS AI Agent: Detect 40% More Comp Events](https://www.gatherinsights.com/en/qs-ai-agent)
+35. [Construction Progress Tracking Software](https://www.openspace.ai/products/progress-tracking/)
+36. [What Is Buildots? AI Construction Progress Tracking](https://www.meltplan.com/glossary/buildots)
+37. [Construction Dispute Resolution UK](https://quentessentialsurveying.com/construction-dispute-resolution/)
+38. [King's publishes third construction adjudication report focusing on key trends](https://www.kcl.ac.uk/news/kings-publishes-third-construction-adjudication-report-focusing-on-key-trends)
+39. [UK construction adjudication: insights from King's College London's 2024 Adjudication Report: record referrals, enforcement trends, smash and grab claims, diversity, speed and possible HGCRA reforms - Legal News - LexisNexis UK](https://www.lexisnexis.com/en-gb/legal/news/construction-adjudication-common-themes-key-takeaways)
+40. [2022: A year of adjudication in review - King's College and the Adjudication Society's annual report on adjudication - Stevens & Bolton LLP](https://www.stevens-bolton.com/insights/102kstf/2022-a-year-of-adjudication-in-review-kings-college-and-the-adjudication-soci/)
+41. [TCC decision on validity of payment and payless notices served simultaneously](https://www.charlesrussellspeechlys.com/en/insights/expert-insights/construction-engineering-and-projects/2025/tcc-decision-on-validity-of-payment-and-payless-notices-served-simultaneously/)
+42. [Davies & Davies](https://www.dda.law/legal-updates/view/reasonably-clear-commercially-sensible-and-fully-payable-1st-formations-ltd-v-lapp-industries-ltd-2025-ewhc-1526-tcc-19-june-2025)
+43. [Payapps Pricing, Reviews & Features - Capterra Canada 2026](https://www.capterra.ca/reviews/1021209/payapps)
+44. [Banning construction retentions: what the 2026 Commercial Payments Bill means for contractors - Taurus Collections](https://tauruscollections.com/construction-retentions-commercial-payments-bill-contractors)
+45. [Why Construction Firms Should Review Unpaid Retentions Before Payment Rules Change - Taurus Collections](https://tauruscollections.com/construction-unpaid-retentions-payment-rules-change/)
+46. [Payapps](https://www.payapps.com/uk/)
+47. [Payapps Software Features](https://www.payapps.com/uk/features/)
+48. [What is a payment certificate in construction?](https://www.payapps.com/blogs-uk/what-is-a-payment-certificate-in-construction-uk/)
+49. [Standardise, streamline and simplify applications for payment with Payapps](https://www.pbctoday.co.uk/news/digital-construction-news/construction-software-news/standardise-streamline-and-simplify-applications-for-payment-with-payapps/146606/)
+50. [Payapps Pricing, Cost & Reviews - Capterra UK 2026](https://www.capterra.co.uk/software/1021209/payapps)
+51. [Register](https://campaign.causeway.com/register-from-data-to-decisions-ai-construction-finance)
+52. [Procore for contractors: API, data access & AI](https://tradesindex.org/software/procore/)
+53. [Best Access Coins Alternative (2026): Archdesk vs COINS](https://archdesk.com/access-coins-alternative)
+54. [Construction Management Software for UAE Contractors](https://archdesk.com/en-ae)
+55. [C-Link](https://c-link.com/)
+56. [Best Applications for Payment Software UK (2026 Guide) | Site Samurai](https://www.sitesamurai.co.uk/compare/best-applications-for-payment-software-uk)
+57. [Payment Applications Under the Construction Act: A Practical Guide](https://www.constructionai.io/blog/payment-applications-construction-act)
+58. [Streamlinefeed](https://streamlinefeed.co.ke/news/commercial-payments-bill-reaches-lords-report-stage)
+59. [The End of Retention? UK’s Commercial Payments Bill and What It Means for Construction](https://oberoimehak.substack.com/p/the-end-of-retention-uks-commercial)
+60. [Commercial Payments Bill \[HL\] - Second Reading: 9 Jun 2026: House of Lords debates - TheyWorkForYou](https://www.theyworkforyou.com/lords/?id=2026-06-09a.1242.5)
+61. [UK Government Response to Late Payment Consultation](https://www.mayerbrown.com/en/insights/publications/2026/03/uk-government-response-to-late-payment-consultation)
