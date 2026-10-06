@@ -94,6 +94,7 @@ model Organisation {
   fromEmail        String?
   fromName         String?
   requiredDocTypes String[]
+  aiConsentAt     DateTime?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
