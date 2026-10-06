@@ -37,6 +37,8 @@ export interface DrawdownParams {
   packageValue: number
   /** Retention percentage (e.g. 5 for 5%) */
   retentionPct: number
+  /** Forecast profile for distribution */
+  profile?: string // EVEN, FRONT_LOADED, S_CURVE, BACK_LOADED
   /** All payment cycles for this subcontract, ordered by cycle number,
    *  with their assessments (if any). */
   cycles: Array<{
@@ -102,16 +104,20 @@ export function computeDrawdown(params: DrawdownParams): DrawdownResult {
     0,
   )
 
-  // 3) Compute forecast per remaining cycle
+  // 3) Compute forecast per remaining cycle using the selected profile
   const remainingCommitment = Math.max(0, packageValue - certifiedToDate)
   const remainingCycles = forecastCycles.length
-  const forecastPerCycle =
-    remainingCycles > 0 ? remainingCommitment / remainingCycles : 0
+  const weights = profileWeights(params.profile ?? "EVEN", remainingCycles)
+  const totalWeight = weights.reduce((s, w) => s + w, 0)
+  const forecastValues = weights.map((w) =>
+    remainingCycles > 0 ? (w / totalWeight) * remainingCommitment : 0,
+  )
 
   // 4) Build rows — interleave actual and forecast in cycle-number order
   const allCycles = [...cycles].sort((a, b) => a.cycleNumber - b.cycleNumber)
 
   let cumulative = 0
+  let forecastIdx = 0
   const rows: DrawdownRow[] = allCycles.map((c) => {
     const isActual = !!c.assessment?.isLocked
     const isForecast = !isActual && CYCLE_STATES_THAT_COUNT.has(c.status)
@@ -119,10 +125,11 @@ export function computeDrawdown(params: DrawdownParams): DrawdownResult {
     const actualRetention = isActual ? Number(c.assessment!.retentionAmount) : null
     const actualNet = isActual ? Number(c.assessment!.netThisCycle) : null
 
-    const forecastGross = isActual ? actualGross! : isForecast ? forecastPerCycle : 0
+    const fv = isForecast ? forecastValues[forecastIdx++] ?? 0 : 0
+    const forecastGross = isActual ? actualGross! : isForecast ? fv : 0
     const forecastRetention = isActual
       ? actualRetention!
-      : isForecast ? forecastPerCycle * (retentionPct / 100) : 0
+      : isForecast ? fv * (retentionPct / 100) : 0
     const forecastNet = forecastGross - forecastRetention
 
     cumulative += isActual ? actualNet! : forecastNet
@@ -200,4 +207,44 @@ export function computeDrawdown(params: DrawdownParams): DrawdownResult {
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100
+}
+
+/** Generate weight distribution for N cycles based on forecast profile. */
+export function profileWeights(profile: string, count: number): number[] {
+  if (count <= 0) return []
+  const weights: number[] = new Array(count).fill(1)
+
+  switch (profile) {
+    case "EVEN":
+      return weights // all 1s → equal shares
+
+    case "FRONT_LOADED": {
+      // First third gets 50% of weight, decaying linearly
+      for (let i = 0; i < count; i++) {
+        const pos = i / count
+        weights[i] = pos < 0.33 ? 2 - pos * 3 : Math.max(0.2, 1 - pos)
+      }
+      break
+    }
+
+    case "S_CURVE": {
+      // Logistic S-curve: slow start, peak in middle, tail off
+      for (let i = 0; i < count; i++) {
+        const x = (i / (count - 1 || 1) - 0.5) * 8 // scale to [-4, 4]
+        weights[i] = 1 / (1 + Math.exp(-x)) * (1 - 1 / (1 + Math.exp(-(x - 2)))) + 0.1
+      }
+      break
+    }
+
+    case "BACK_LOADED": {
+      // Last third gets 50% of weight, increasing linearly
+      for (let i = 0; i < count; i++) {
+        const pos = i / count
+        weights[i] = pos > 0.67 ? 0.5 + (pos - 0.67) * 4 : Math.max(0.2, pos + 0.2)
+      }
+      break
+    }
+  }
+
+  return weights
 }

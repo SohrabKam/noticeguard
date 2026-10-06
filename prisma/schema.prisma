@@ -68,6 +68,13 @@ enum VariationStatus {
   AGREED
 }
 
+enum ForecastProfile {
+  EVEN
+  FRONT_LOADED
+  S_CURVE
+  BACK_LOADED
+}
+
 enum DocumentStatus {
   VALID
   EXPIRING_SOON
@@ -255,6 +262,7 @@ model PaymentSchedule {
   payLessDeadlineType       DayType                @default(CALENDAR)
   scheduleStartDate         DateTime
   scheduleEndDate           DateTime
+  forecastProfile          ForecastProfile @default(EVEN)
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @updatedAt
 

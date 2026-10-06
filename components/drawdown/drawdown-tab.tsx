@@ -12,6 +12,16 @@ function fmtDate(d: Date | string): string {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
 }
 
+function profileLabel(p: string): string {
+  switch (p) {
+    case "EVEN": return "Even distribution"
+    case "FRONT_LOADED": return "Front-loaded"
+    case "S_CURVE": return "S-curve"
+    case "BACK_LOADED": return "Back-loaded"
+    default: return p
+  }
+}
+
 type Summary = {
   packageValue: number
   certifiedToDate: number
@@ -24,7 +34,7 @@ type Summary = {
   mcdReleaseAmount: number | null
 }
 
-export function DrawdownTab({ rows, summary }: { rows: DrawdownRow[]; summary: Summary }) {
+export function DrawdownTab({ rows, summary, profile }: { rows: DrawdownRow[]; summary: Summary; profile?: string }) {
   const maxCumulative = Math.max(
     1,
     ...rows.map((r) => Math.abs(r.cumulativeNet)),
@@ -53,7 +63,7 @@ export function DrawdownTab({ rows, summary }: { rows: DrawdownRow[]; summary: S
         <SummaryCard
           label="Remaining"
           value={`£${fmt(summary.remainingCommitment)}`}
-          sub={`${summary.remainingCycles} cycle${summary.remainingCycles !== 1 ? "s" : ""} remaining`}
+          sub={`${summary.remainingCycles} cycle${summary.remainingCycles !== 1 ? "s" : ""} remaining · ${profileLabel(profile ?? "EVEN")}`}
         />
       </div>
 

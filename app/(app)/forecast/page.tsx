@@ -39,6 +39,7 @@ export default async function CashForecastPage() {
     const drawdown = computeDrawdown({
       packageValue,
       retentionPct: Number(order.retentionPct) * 100,
+      profile: order.paymentSchedule?.forecastProfile ?? "EVEN",
       cycles: order.paymentSchedule.cycles.map((c) => ({
         id: c.id,
         cycleNumber: c.cycleNumber,

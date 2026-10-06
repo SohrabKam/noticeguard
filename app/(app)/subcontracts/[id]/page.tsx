@@ -134,9 +134,10 @@ export default async function SubcontractDetailPage({
     0,
   )
   const drawdown = computeDrawdown({
-    packageValue,
-    retentionPct: Number(order.retentionPct) * 100, // stored as decimal, spec uses %
-    cycles: cycles.map((c) => ({
+      packageValue,
+      retentionPct: Number(order.retentionPct) * 100,
+      profile: order.paymentSchedule?.forecastProfile ?? "EVEN",
+      cycles: cycles.map((c) => ({
       id: c.id,
       cycleNumber: c.cycleNumber,
       status: c.status,
@@ -339,7 +340,7 @@ export default async function SubcontractDetailPage({
 
         <TabsContent value="drawdown" className="mt-4">
           {order.paymentSchedule && order.scheduleLines.length > 0 ? (
-            <DrawdownTab rows={drawdown.rows} summary={drawdown.summary} />
+            <DrawdownTab rows={drawdown.rows} summary={drawdown.summary} profile={order.paymentSchedule?.forecastProfile ?? "EVEN"} />
           ) : (
             <div className="rounded-lg border-2 border-dashed border-slate-200 py-16 text-center text-sm text-slate-400">
               Set up the activity schedule and payment terms first to see the cash-out forecast.
