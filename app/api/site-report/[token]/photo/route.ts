@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { put } from "@vercel/blob"
 import { db } from "@/lib/db"
 import { z } from "zod"
+import { checkPhotoIntegrity, contentHash } from "@/lib/photo-integrity"
+import type { Prisma } from "@/lib/generated/prisma/client"
 
 const PhotoSchema = z.object({
   lineId: z.string(),
@@ -29,10 +31,18 @@ export async function POST(
   const line = await db.siteReportLine.findFirst({ where: { id: lineId, siteReportId: report.id } })
   if (!line) return NextResponse.json({ error: "Line not found" }, { status: 404 })
 
-  // Convert data URL to Buffer for Blob upload
+  // Convert data URL to Buffer for Blob upload + integrity check
   const [header, b64] = image.split(",")
   const mime = header.match(/data:(image\/\w+);/)?.at(1) ?? "image/jpeg"
   const buffer = Buffer.from(b64, "base64")
+
+  // Check photo integrity
+  const existingHashes = ((line.photos as Array<{ url: string; hash?: string }>) ?? [])
+    .map((p) => p.hash ?? "")
+    .filter(Boolean)
+  const integrity = checkPhotoIntegrity(buffer, existingHashes)
+  const hash = contentHash(buffer)
+
   const ext = mime.split("/")[1] ?? "jpg"
   const key = `site-report/${report.paymentCycleId}/${crypto.randomUUID()}.${ext}`
 
@@ -41,12 +51,12 @@ export async function POST(
     contentType: mime,
   })
 
-  // Record the photo
-  const existingPhotos = (line.photos as Array<{ url: string; takenAt: string }>) ?? []
-  const photos = [...existingPhotos, { url: blob.url, takenAt }]
+  // Record the photo with integrity data
+  const existingPhotos = (line.photos as Array<Record<string, unknown>>) ?? []
+  const newPhotos = [...existingPhotos, { url: blob.url, takenAt, hash, integrity }]
   await db.siteReportLine.update({
     where: { id: lineId },
-    data: { photos },
+    data: { photos: newPhotos as Parameters<typeof db.siteReportLine.update>[0]["data"]["photos"] },
   })
 
   return NextResponse.json({ ok: true, url: blob.url, takenAt }, { status: 201 })
