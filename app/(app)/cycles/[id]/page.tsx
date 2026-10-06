@@ -17,6 +17,8 @@ import { CloseCycleButton } from "@/components/cycles/close-cycle-button"
 import { MilestoneDateEditor } from "@/components/cycles/milestone-date-editor"
 import { SiteReportCard } from "@/components/cycles/site-report-card"
 import { getCycleSiteReport } from "@/lib/actions/site-report"
+import { AssessmentFlagsBanner } from "@/components/cycles/assessment-flags-banner"
+import { computeAssessmentFlags, type FlagLine } from "@/lib/assessment-flags"
 import { AlertTriangle } from "lucide-react"
 
 export default async function CycleWorkspacePage({
@@ -91,6 +93,50 @@ export default async function CycleWorkspacePage({
   })
 
   const siteReport = await getCycleSiteReport(id).catch(() => null)
+
+  // ── Assessment flags ──
+  // Fetch prior cycle's assessment for deviation/duplicate detection,
+  // and variation statuses for uncertified-variation checks.
+  const [priorCycle, variations] = await Promise.all([
+    db.paymentCycle.findFirst({
+      where: {
+        paymentScheduleId: cycle.paymentScheduleId,
+        cycleNumber: cycle.cycleNumber - 1,
+      },
+      include: {
+        assessment: {
+          include: { lines: { orderBy: { sortOrder: "asc" } } },
+        },
+      },
+    }),
+    cycle.paymentSchedule?.subcontractOrderId
+      ? db.variation.findMany({
+          where: {
+            subcontractOrderId: cycle.paymentSchedule.subcontractOrderId,
+            status: { in: ["INSTRUCTED", "AGREED"] },
+          },
+        })
+      : Promise.resolve([]),
+  ])
+
+  const assessmentFlags =
+    cycle.assessment?.lines
+      ? computeAssessmentFlags({
+          lines: cycle.assessment.lines.map(flagLineFromDb),
+          priorCycle: priorCycle?.assessment?.lines
+            ? { cycleNumber: priorCycle.cycleNumber, lines: priorCycle.assessment.lines.map(flagLineFromDb) }
+            : undefined,
+          siteReportLines: siteReport?.lines.map((l) => ({
+            itemRef: l.itemRef,
+            pctComplete: l.pctComplete,
+          })),
+          applicationLines: cycle.application?.lines.map((l) => ({
+            itemRef: l.itemRef,
+            valueToDateClaimed: Number(l.valueToDateClaimed),
+          })),
+          variationStatuses: new Map(variations.map((v) => [v.id, v.status])),
+        })
+      : []
 
   const order = cycle.paymentSchedule.subcontractOrder
   const now = new Date()
@@ -269,6 +315,7 @@ export default async function CycleWorkspacePage({
         </TabsList>
 
         <TabsContent value="assessment" className="mt-4">
+          <AssessmentFlagsBanner flags={assessmentFlags} cycleId={id} />
           {assessmentForWorkspace ? (
             <AssessmentWorkspaceLoader
               assessment={assessmentForWorkspace}
@@ -413,4 +460,27 @@ function AuditTrail({ events }: { events: any[] }) {
       ))}
     </div>
   )
+}
+
+/** Convert a Prisma AssessmentLine to the FlagLine shape expected by computeAssessmentFlags. */
+function flagLineFromDb(l: {
+  itemRef: string
+  description: string
+  contractValue: { toNumber?: () => number } | number | { valueOf: () => number }
+  valueToDate: { toNumber?: () => number } | number | { valueOf: () => number }
+  claimedValueToDate: { toNumber?: () => number } | number | { valueOf: () => number } | null
+  isVariation: boolean
+  variationId: string | null
+  indentLevel: number
+}): import("@/lib/assessment-flags").FlagLine {
+  return {
+    itemRef: l.itemRef,
+    description: l.description,
+    contractValue: Number(l.contractValue),
+    valueToDate: Number(l.valueToDate),
+    claimedValueToDate: l.claimedValueToDate !== null ? Number(l.claimedValueToDate) : null,
+    isVariation: l.isVariation,
+    variationId: l.variationId,
+    indentLevel: l.indentLevel,
+  }
 }
