@@ -47,14 +47,13 @@ function rowsToMonthly(rows: DrawdownRow[]): Map<string, number> {
   return map
 }
 
-export function PortfolioForecastGrid({ rows }: { rows: ForecastPortfolioRow[] }) {
+export function PortfolioForecastGrid({ rows, dateRange }: { rows: ForecastPortfolioRow[]; dateRange?: { start: string; end: string } }) {
   const [filterProject, setFilterProject] = useState("")
-  const [filterMonth, setFilterMonth] = useState(12) // show next N months
 
-  // Compute date range
-  const now = new Date()
-  const endDate = new Date(now.getFullYear(), now.getMonth() + filterMonth, 0)
-  const monthKeys = monthsBetween(now, endDate)
+  // Compute date range from actual data or fallback to 12 months
+  const startDate = dateRange ? new Date(dateRange.start) : new Date()
+  const endDate = dateRange ? new Date(dateRange.end) : new Date(Date.now() + 365 * 86400000)
+  const monthKeys = monthsBetween(startDate, endDate)
 
   // Build project filter options
   const projects = useMemo(() => {
@@ -110,7 +109,7 @@ export function PortfolioForecastGrid({ rows }: { rows: ForecastPortfolioRow[] }
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `noticeguard-cash-forecast-${now.toISOString().slice(0, 10)}.csv`
+    a.download = `noticeguard-cash-forecast-${new Date().toISOString().slice(0, 10)}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -128,17 +127,6 @@ export function PortfolioForecastGrid({ rows }: { rows: ForecastPortfolioRow[] }
           {projects.map((p) => (
             <option key={p} value={p}>{p}</option>
           ))}
-        </select>
-
-        <select
-          value={filterMonth}
-          onChange={(e) => setFilterMonth(Number(e.target.value))}
-          className="text-sm rounded-md border border-slate-200 px-3 py-1.5 bg-white"
-        >
-          <option value={6}>Next 6 months</option>
-          <option value={12}>Next 12 months</option>
-          <option value={18}>Next 18 months</option>
-          <option value={24}>Next 24 months</option>
         </select>
 
         <span className="text-xs text-slate-400">{filtered.length} subcontract{filtered.length !== 1 ? "s" : ""}</span>
@@ -252,7 +240,7 @@ export function PortfolioForecastGrid({ rows }: { rows: ForecastPortfolioRow[] }
           <p className="text-lg font-bold text-slate-900">
             £{fmt(Array.from(monthTotals.entries()).filter(([k]) => {
               const d = new Date(k + "-01")
-              return d >= now && d <= new Date(now.getFullYear(), now.getMonth() + 1, 0)
+              return d >= startDate && d <= new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0)
             }).reduce((s, [, v]) => s + v, 0))}
           </p>
         </div>

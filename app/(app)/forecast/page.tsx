@@ -16,9 +16,7 @@ export default async function CashForecastPage() {
         include: {
           cycles: {
             orderBy: { cycleNumber: "asc" },
-            include: {
-              assessment: true,
-            },
+            include: { assessment: true },
           },
         },
       },
@@ -27,14 +25,15 @@ export default async function CashForecastPage() {
     orderBy: { project: { name: "asc" } },
   })
 
-  // Compute drawdown for each subcontract and flatten into monthly rows
-  const rows: ForecastPortfolioRow[] = orders.flatMap((order) => {
-    if (!order.paymentSchedule || order.scheduleLines.length === 0) return []
+  // Build rows and determine the actual date range from cycle dates
+  let firstDate: Date | null = null
+  let lastDate: Date | null = null
+  const rows: ForecastPortfolioRow[] = []
 
-    const packageValue = order.scheduleLines.reduce(
-      (sum, l) => sum + Number(l.contractValue),
-      0,
-    )
+  for (const order of orders) {
+    if (!order.paymentSchedule || order.scheduleLines.length === 0) continue
+
+    const packageValue = order.scheduleLines.reduce((sum, l) => sum + Number(l.contractValue), 0)
 
     const drawdown = computeDrawdown({
       packageValue,
@@ -50,7 +49,14 @@ export default async function CashForecastPage() {
       retention: order.retentionLedger,
     })
 
-    // Convert drawdown rows to monthly net cash buckets
+    // Track date range from drawdown rows
+    for (const dr of drawdown.rows) {
+      const d = new Date(dr.finalDateForPayment)
+      if (!firstDate || d < firstDate) firstDate = d
+      if (!lastDate || d > lastDate) lastDate = d
+    }
+
+    // Convert to monthly net cash
     const monthly = new Map<string, number>()
     for (const dr of drawdown.rows) {
       const d = new Date(dr.finalDateForPayment)
@@ -59,35 +65,35 @@ export default async function CashForecastPage() {
       monthly.set(key, (monthly.get(key) ?? 0) + net)
     }
 
-    return {
+    rows.push({
       projectName: order.project.name,
       subcontractRef: order.reference,
       subcontractorName: order.subcontractor.name,
       subcontractId: order.id,
       monthlyNet: monthly,
-    }
-  })
+    })
+  }
+
+  // Default to 12 months from now if no data
+  if (!firstDate) firstDate = new Date()
+  if (!lastDate) lastDate = new Date(Date.now() + 365 * 86400000)
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Cash forecast</h1>
         <p className="text-slate-500 text-sm mt-0.5">
-          Portfolio cash-out forecast — what you owe subbies, month by month. Retention releases shown as negative (money coming back).
+          Portfolio cash-out forecast across {orders.length} subcontracts. Amounts are net cash out per month based on payment cycle final dates.
         </p>
       </div>
 
-      {rows.length === 0 ? (
-        <div className="rounded-lg border-2 border-dashed border-slate-200 py-20 text-center text-sm text-slate-400">
-          No subcontracts with payment schedules yet.
-          <br />
-          <a href="/subcontracts" className="text-indigo-600 hover:underline mt-1 inline-block">
-            Set up your first subcontract →
-          </a>
-        </div>
-      ) : (
-        <PortfolioForecastGrid rows={rows} />
-      )}
+      <PortfolioForecastGrid
+        rows={rows}
+        dateRange={{
+          start: firstDate.toISOString(),
+          end: lastDate.toISOString(),
+        }}
+      />
     </div>
   )
 }

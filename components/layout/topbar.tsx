@@ -3,7 +3,7 @@ import { UserButton, OrganizationSwitcher } from "@clerk/nextjs"
 export async function Topbar() {
   return (
     <header className="h-14 border-b bg-white flex items-center justify-between px-6 shrink-0">
-      <div className="text-sm text-slate-500 flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <OrganizationSwitcher
           hidePersonal
           appearance={{
