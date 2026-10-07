@@ -1,5 +1,19 @@
 # NoticeGuard — Honest Product & Market Assessment
 
+The following assumptions from earlier strategy docs are **wrong or overstated**:
+
+| Claim | Reality |
+|---|---|
+| "Regional house builders are the best first segment" | ▶ General building, fit-out, and M&E/civils/facade specialists acting as mains are better. House builders pay trades on plot-stage measures, often via self-billing — not application-based assessment. |
+| "Ireland at launch" | ▶ Ireland is Phase 2. Statute has no default-payment consequence, adjudication volume is tiny (85-101/year vs 2,264 UK), and RCT tax adds complexity. Northern Ireland first. |
+| "RICS compliance is a sales lever" | ▶ Overstated. Standard binds RICS-regulated firms; most contractors are not. No vendor markets it. Keep as a trust signal. |
+| "No competitor has mobile site-to-office progress" | ▶ False. Eque2's Mobile Tick Sheets does this since 2018. |
+| "Housing starts declining" | ▶ Wrong. Q2 2026 up 20% YoY. Mood is cautious, not frozen. |
+| "Free pilots" | ▶ Don't. Charge £250/mo founding rate, locked 24 months. |
+| "Part-time founder risk" | ▶ The #1 risk. A part-time founder selling deadline-critical software. |
+
+---
+
 *October 2026 · Prepared for Sohrab Kamkar*
 
 ## 1. The product — honest review
