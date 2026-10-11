@@ -714,3 +714,41 @@ export const missedApplicationSweep = inngest.createFunction(
     return { cyclesChecked: overdueCycles.length, alertsSent }
   }
 )
+
+// ─── Integration sync ─────────────────────────────────────────────────────────
+
+export const integrationSyncSweep = inngest.createFunction(
+  {
+    id: "integration-sync-sweep",
+    name: "Integration sync sweep",
+    triggers: [{ cron: "TZ=Europe/London */15 * * * *" }],
+    onFailure: async ({ error }) => notifyOpsOfFailure("integration-sync-sweep", error),
+  },
+  async ({ step }) => {
+    const { syncConnection } = await import("@/lib/integrations/sync-engine")
+
+    const connections = await step.run("fetch-active-connections", async () => {
+      return db.connection.findMany({ where: { isActive: true } })
+    })
+
+    const results: Array<{
+      connectionId: string; label: string; status: string
+      recordsRead: number; recordsUpserted: number
+    }> = []
+
+    for (const conn of connections) {
+      const result = await step.run(`sync-connection-${conn.id}`, async () => {
+        return syncConnection(conn.id)
+      })
+      results.push({
+        connectionId: conn.id,
+        label: conn.label,
+        status: result.status,
+        recordsRead: result.recordsRead,
+        recordsUpserted: result.recordsUpserted,
+      })
+    }
+
+    return { connectionsSynced: connections.length, results }
+  }
+)

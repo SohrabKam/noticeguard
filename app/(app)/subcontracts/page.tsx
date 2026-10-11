@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/dates/uk-bank-holidays"
 import Link from "next/link"
 import { Plus, FileText, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SyncOriginBadge } from "@/components/integrations/sync-origin-badge"
 
 export default async function SubcontractsPage({
   searchParams,
@@ -153,7 +154,12 @@ export default async function SubcontractsPage({
                   <tr key={order.id} className="hover:bg-slate-50">
                     <td className="px-4 py-3 font-medium text-slate-900">{order.subcontractor.name}</td>
                     <td className="px-4 py-3 text-slate-600">{order.project.name}</td>
-                    <td className="px-4 py-3 text-slate-500 font-mono text-xs">{order.reference}</td>
+                    <td className="px-4 py-3 text-slate-500 font-mono text-xs">
+                      <span className="flex items-center gap-1.5">
+                        {order.reference}
+                        <SyncOriginBadge id={order.id} />
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-right font-medium">
                       £{Number(order.contractSum).toLocaleString("en-GB")}
                     </td>

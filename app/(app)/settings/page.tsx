@@ -99,6 +99,20 @@ export default async function SettingsPage() {
       <div className="rounded-lg border bg-white p-6 space-y-3">
         <div className="flex items-center justify-between">
           <div>
+            <h2 className="font-semibold text-slate-900">Accounting integrations</h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Connect to iplicit, Sage, Xero, or QuickBooks to automatically pull subcontractor financial data.
+            </p>
+          </div>
+          <Link href="/settings/connections" className="text-xs font-medium text-indigo-600 hover:underline shrink-0">
+            Manage →
+          </Link>
+        </div>
+      </div>
+
+      <div className="rounded-lg border bg-white p-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
             <h2 className="font-semibold text-slate-900">AI governance</h2>
             <p className="text-xs text-slate-400 mt-0.5">
               RICS-compliant AI systems register, risk register, and dip-sampling. Required under the <em>Responsible use of AI in surveying practice</em> standard.

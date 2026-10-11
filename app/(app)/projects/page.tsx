@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Plus, FolderOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { EditProjectSheet } from "@/components/projects/edit-project-sheet"
+import { SyncOriginBadge } from "@/components/integrations/sync-origin-badge"
 
 function fmt(n: number) {
   if (n >= 1_000_000) return `£${(n / 1_000_000).toFixed(1)}m`
@@ -82,7 +83,9 @@ export default async function ProjectsPage() {
                     <EditProjectSheet project={{ id: p.id, name: p.name, reference: p.reference, address: p.address }} />
                   </div>
                 </div>
-                <h3 className="font-semibold text-slate-900">{p.name}</h3>
+                <h3 className="font-semibold text-slate-900">
+                  <span className="inline-flex items-center gap-2">{p.name}<SyncOriginBadge id={p.id} /></span>
+                </h3>
                 {p.reference && <p className="text-xs text-slate-400 mt-0.5">{p.reference}</p>}
                 {p.address && <p className="text-sm text-slate-500 mt-1">{p.address}</p>}
                 {contractValue > 0 && (

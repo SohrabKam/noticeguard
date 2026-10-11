@@ -91,6 +91,20 @@ enum AlertType {
   DAILY_DIGEST
 }
 
+enum ConnectionProvider {
+  IPLICIT
+  SAGE
+  XERO
+  QUICKBOOKS
+}
+
+enum SyncStatus {
+  NEVER_RUN
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
 // ─── Organisation (tenant) ───────────────────────────────────────────────────
 
 model Organisation {
@@ -110,6 +124,8 @@ model Organisation {
   subcontractors Subcontractor[]
   alertConfigs   AlertConfig[]
   apiKeys        ApiKey[]
+  connections    Connection[]
+  legalEntities  LegalEntity[]
 
   @@map("organisations")
 }
@@ -166,8 +182,10 @@ model Project {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organisation Organisation       @relation(fields: [organisationId], references: [id], onDelete: Cascade)
-  subcontracts SubcontractOrder[]
+  legalEntityId  String?
+  organisation   Organisation       @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  legalEntity    LegalEntity?        @relation(fields: [legalEntityId], references: [id])
+  subcontracts   SubcontractOrder[]
 
   @@map("projects")
 }
@@ -568,4 +586,57 @@ model SiteReportLine {
   siteReport SiteReport @relation(fields: [siteReportId], references: [id], onDelete: Cascade)
 
   @@map("site_report_lines")
+}
+
+// ─── Accounting System Connections ────────────────────────────────────────────
+
+model Connection {
+  id             String             @id @default(cuid())
+  organisationId String
+  provider       ConnectionProvider
+  label          String
+  credentials    Json
+  lastSyncedAt   DateTime?
+  isActive       Boolean            @default(true)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  syncLogs     SyncLog[]
+
+  @@map("connections")
+}
+
+model SyncLog {
+  id              String     @id @default(cuid())
+  connectionId    String
+  status          SyncStatus
+  startedAt       DateTime
+  completedAt     DateTime?
+  recordsRead     Int        @default(0)
+  recordsUpserted Int        @default(0)
+  errorMessage    String?
+  cursorState     Json?
+
+  connection Connection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([connectionId, startedAt])
+  @@map("sync_logs")
+}
+
+// ─── Legal Entities (synced from accounting system) ───────────────────────────
+
+model LegalEntity {
+  id             String             @id @default(cuid())
+  organisationId String
+  externalId     String
+  provider       ConnectionProvider
+  name           String
+  createdAt      DateTime           @default(now())
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  projects      Project[]
+
+  @@unique([organisationId, externalId, provider])
+  @@map("legal_entities")
 }
