@@ -18,6 +18,7 @@ import { DrawdownTab } from "@/components/drawdown/drawdown-tab"
 import { computeDrawdown } from "@/lib/drawdown"
 import { ExtendScheduleForm } from "@/components/schedule/extend-schedule-form"
 import { AUDIT_EVENT_LABELS } from "@/lib/audit-event-labels"
+import { PushToIplicitButton } from "@/components/integrations/push-to-iplicit-button"
 
 type CycleWithNotices = Prisma.PaymentCycleGetPayload<{
   include: {
@@ -193,6 +194,11 @@ export default async function SubcontractDetailPage({
         >
           + New subcontract
         </Link>
+        {!order.id.startsWith("ext_") && (
+          <div className="ml-3">
+            <PushToIplicitButton orderId={order.id} />
+          </div>
+        )}
       </div>
 
       <Tabs defaultValue="cycles">
