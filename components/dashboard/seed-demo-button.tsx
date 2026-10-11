@@ -3,7 +3,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-export function SeedDemoButton() {
+export function SeedDemoButton({ hidden }: { hidden?: boolean }) {
+  if (hidden) return null
+
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 

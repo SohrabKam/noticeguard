@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { createConnection, testConnection } from "@/lib/actions/connections"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 const PROVIDERS = [{ value: "IPLICIT", label: "iplicit" }]
 
@@ -43,41 +46,41 @@ export function AddConnectionForm() {
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-slate-900">Add connection</h2>
         {!open && (
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="text-xs font-medium text-indigo-600 hover:underline"
-          >
+          <Button variant="link" size="xs" onClick={() => setOpen(true)}>
             + Add
-          </button>
+          </Button>
         )}
       </div>
 
       {open && (
         <form action={handleSave} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Provider</label>
-            <select name="provider" className="w-full text-sm border rounded-md px-3 py-2">
+          <div className="space-y-1.5">
+            <Label>Provider</Label>
+            <select
+              name="provider"
+              className="w-full h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
               {PROVIDERS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>
           </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Label</label>
-            <input name="label" placeholder="Our iplicit account" className="w-full text-sm border rounded-md px-3 py-2" required />
+          <div className="space-y-1.5">
+            <Label htmlFor="conn-label">Label</Label>
+            <Input id="conn-label" name="label" placeholder="Our iplicit account" required />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Domain</label>
-            <input name="domain" placeholder="sandbox.demo" className="w-full text-sm border rounded-md px-3 py-2" required />
+          <div className="space-y-1.5">
+            <Label htmlFor="conn-domain">Domain</Label>
+            <Input id="conn-domain" name="domain" placeholder="sandbox.demo" required />
+            <p className="text-[0.7rem] text-slate-400">Your iplicit environment domain (e.g. sandbox.demo)</p>
           </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Username</label>
-            <input name="username" placeholder="api_user" className="w-full text-sm border rounded-md px-3 py-2" required />
+          <div className="space-y-1.5">
+            <Label htmlFor="conn-username">Username</Label>
+            <Input id="conn-username" name="username" placeholder="api_user" required />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">API Key</label>
-            <input name="userApiKey" type="password" placeholder="••••••••" className="w-full text-sm border rounded-md px-3 py-2" required />
+          <div className="space-y-1.5">
+            <Label htmlFor="conn-apikey">API Key</Label>
+            <Input id="conn-apikey" name="userApiKey" type="password" placeholder="••••••••" required />
           </div>
 
           {testResult && (
@@ -88,24 +91,15 @@ export function AddConnectionForm() {
           {error && <div className="text-xs px-3 py-2 rounded bg-red-50 text-red-700">{error}</div>}
 
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => setOpen(false)} className="text-xs text-slate-500 hover:underline">
+            <Button type="button" variant="ghost" size="xs" onClick={() => setOpen(false)}>
               Cancel
-            </button>
-            <button
-              type="button"
-              formAction={handleTest}
-              disabled={testing}
-              className="text-xs font-medium px-3 py-1.5 rounded-md border border-slate-300 hover:bg-slate-50 disabled:opacity-50"
-            >
+            </Button>
+            <Button type="button" variant="outline" size="xs" formAction={handleTest} disabled={testing}>
               {testing ? "Testing…" : "Test connection"}
-            </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="text-xs font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
-            >
+            </Button>
+            <Button type="submit" size="xs" disabled={saving}>
               {saving ? "Saving…" : "Save"}
-            </button>
+            </Button>
           </div>
         </form>
       )}

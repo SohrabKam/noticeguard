@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/dates/uk-bank-holidays"
 import Link from "next/link"
 import { AlertTriangle, CheckCircle2, Clock, Download, Search } from "lucide-react"
 import { SeedDemoButton } from "@/components/dashboard/seed-demo-button"
+import { Button } from "@/components/ui/button"
 
 export default async function DashboardPage({
   searchParams,
@@ -51,13 +52,11 @@ export default async function DashboardPage({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <SeedDemoButton />
-          <a
-            href="/api/portfolio/export"
-            className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-indigo-600 border border-slate-200 rounded px-3 py-1.5 bg-white hover:border-indigo-300 transition-colors"
-          >
-            <Download className="w-3.5 h-3.5" />
-            Export CSV
+          <SeedDemoButton hidden={cycles.length > 0} />
+          <a href="/api/portfolio/export">
+            <Button variant="outline" size="xs">
+              <Download className="w-3.5 h-3.5" /> Export CSV
+            </Button>
           </a>
         </div>
       </div>

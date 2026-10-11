@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { pushSubcontractToProvider } from "@/lib/actions/connections"
+import { Button } from "@/components/ui/button"
 
 type Props = { orderId: string }
 
@@ -23,14 +24,15 @@ export function PushToIplicitButton({ orderId }: Props) {
 
   return (
     <div className="inline-flex items-center gap-2">
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="xs"
         onClick={handlePush}
-        disabled={pushing || result?.ok}
-        className="text-xs font-medium px-3 py-1.5 rounded-md border border-indigo-200 text-indigo-600 bg-white hover:bg-indigo-50 disabled:opacity-50 transition-colors"
+        disabled={pushing || result?.ok === true}
       >
-        {pushing ? "Pushing…" : result?.ok ? `✓ Pushed (${result.iplicitDocNo})` : "Push to iplicit →"}
-      </button>
+        {pushing ? "Pushing…" : result?.ok === true ? `✓ Pushed (${result.iplicitDocNo})` : "Push to iplicit →"}
+      </Button>
       {result?.error && (
         <span className="text-xs text-red-500">{result.error}</span>
       )}
