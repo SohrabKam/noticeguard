@@ -1,4 +1,4 @@
-# BuilderOps (NoticeGuard)
+# NoticeGuard
 
 A multi-tenant B2B SaaS for main contractors and commercial managers to
 administer subcontractor payments and statutory compliance under the UK
@@ -59,6 +59,14 @@ append-only audit trail.
 - **Programmatic access** — a versioned public API (`/api/v1`) with
   API-key auth for downstream integrations, alongside inbound email
   parsing and outbound webhooks.
+- **Accounting system integrations** — connect NoticeGuard to iplicit
+  (Sage, Xero, QuickBooks forthcoming) to automatically pull
+  subcontractor financial data — purchase orders, invoices, payments,
+  suppliers, projects, and legal entities — into the compliance
+  workflow. 15-minute polling via Inngest with encrypted credential
+  storage. Manual subcontracts can optionally push back to iplicit as
+  purchase orders. Provider-agnostic adapter framework: adding a new
+  accounting system requires only a ~300-line adapter class.
 
 ## Tech stack
 
@@ -86,7 +94,8 @@ append-only audit trail.
 ## Getting Started
 
 Copy `.env.local.example` to `.env.local` and fill in the required
-secrets (Clerk, Neon/`DATABASE_URL`, Resend, Inngest, Vercel Blob), then:
+secrets (Clerk, Neon/`DATABASE_URL`, Resend, Inngest, Vercel Blob,
+`CREDENTIAL_ENCRYPTION_KEY`), then:
 
 ```bash
 npm install
