@@ -119,7 +119,7 @@ export default async function SubcontractsPage({
           </Link>
         </div>
       ) : (
-        <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+        <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b">
               <tr>

@@ -30,7 +30,7 @@ type CycleWithNotices = Prisma.PaymentCycleGetPayload<{
 
 function CycleTable({ rows, dim, now }: { rows: CycleWithNotices[]; dim?: boolean; now: Date }) {
   return (
-    <div className={`rounded-lg border bg-white overflow-hidden shadow-sm ${dim ? "opacity-60" : ""}`}>
+    <div className={`rounded-lg border bg-white overflow-x-auto shadow-sm ${dim ? "opacity-60" : ""}`}>
       <table className="w-full text-sm">
         <thead className="bg-slate-50 border-b">
           <tr>
@@ -188,17 +188,15 @@ export default async function SubcontractDetailPage({
             </p>
           )}
         </div>
-        <Link
-          href={`/subcontracts/new`}
-          className="text-sm text-indigo-600 hover:underline"
-        >
-          + New subcontract
-        </Link>
-        {!order.id.startsWith("ext_") && (
-          <div className="ml-3">
-            <PushToIplicitButton orderId={order.id} />
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/subcontracts/new`}
+            className="text-sm text-indigo-600 hover:underline"
+          >
+            + New subcontract
+          </Link>
+          {!order.id.startsWith("ext_") && <PushToIplicitButton orderId={order.id} />}
+        </div>
       </div>
 
       <Tabs defaultValue="cycles">
@@ -263,7 +261,7 @@ export default async function SubcontractDetailPage({
           <div className="flex justify-end mb-3">
             <LogVariationSheet orderId={order.id} />
           </div>
-          <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+          <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
             {order.variations.length === 0 ? (
               <div className="py-12 text-center text-slate-400 text-sm">No variations logged yet.</div>
             ) : (
@@ -375,7 +373,7 @@ export default async function SubcontractDetailPage({
             const missingTypes = requiredDocTypes.filter((t) => !covered.has(t))
             const hasDocs = order.subcontractor.complianceDocs.length > 0 || missingTypes.length > 0
             return (
-              <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+              <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
                 <div className="px-4 py-3 bg-slate-50 border-b flex items-center justify-between">
                   <span className="text-sm font-medium text-slate-700">Compliance documents</span>
                   <UpsertDocSheet

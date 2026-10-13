@@ -51,7 +51,7 @@ function SystemsTab() {
             <h3 className="font-semibold text-slate-800">
               Phase {phase} — {phase === "1" ? "Deterministic (rules-based, no ML)" : "LLM-assisted (human-verified)"}
             </h3>
-            <div className="rounded-lg border bg-white overflow-hidden">
+            <div className="rounded-lg border bg-white overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 border-b">
                   <tr>
@@ -155,7 +155,7 @@ function RisksTab() {
         </p>
       </div>
 
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 border-b">
             <tr>

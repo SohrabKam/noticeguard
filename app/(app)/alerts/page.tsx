@@ -54,7 +54,7 @@ function ConfigSection({
   if (configs.length === 0) return null
 
   return (
-    <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+    <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
       <div className="px-4 py-2.5 bg-slate-50 border-b">
         <h2 className="text-sm font-semibold text-slate-700">{title}</h2>
       </div>

@@ -140,7 +140,7 @@ export function PortfolioForecastGrid({ rows, dateRange }: { rows: ForecastPortf
       </div>
 
       {/* Grid */}
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white overflow-x-auto">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

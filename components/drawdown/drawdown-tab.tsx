@@ -111,7 +111,7 @@ export function DrawdownTab({ rows, summary, profile }: { rows: DrawdownRow[]; s
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white overflow-x-auto">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 border-b">

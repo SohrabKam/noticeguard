@@ -65,7 +65,7 @@ export default async function CompliancePage() {
         const missingTypes = requiredDocTypes.filter((t) => !covered.has(t))
 
         return (
-          <div key={sub.id} className="rounded-lg border bg-white overflow-hidden shadow-sm">
+          <div key={sub.id} className="rounded-lg border bg-white overflow-x-auto shadow-sm">
             <div className="px-4 py-3 bg-slate-50 border-b flex items-center justify-between">
               <div>
                 <span className="font-semibold text-slate-900">{sub.name}</span>

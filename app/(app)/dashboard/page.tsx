@@ -183,7 +183,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Cycles table */}
-      <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+      <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
         {visibleCycles.length === 0 ? (
           <div className="py-16 text-center text-slate-400 text-sm">
             {search ? `No cycles matching "${q}".` : filter ? "No cycles match this filter." : "No live payment cycles. Add a subcontract to get started."}
@@ -256,7 +256,7 @@ export default async function DashboardPage({
       {recentlyPaid.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Recently paid (last 90 days)</h2>
-          <div className="rounded-lg border bg-white overflow-hidden shadow-sm">
+          <div className="rounded-lg border bg-white overflow-x-auto shadow-sm">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 border-b">
                 <tr>
