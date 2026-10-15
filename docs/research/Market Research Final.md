@@ -36,7 +36,7 @@ The pain is real, but it is narrower than the internal assessment assumes. Misse
 
 ## 1. Is there genuine demand among regional house builders?
 
-There is genuine demand for payment-notice compliance among main contractors. Among regional house builders it is weaker, and partly covered already. The general case is strong. Payment-notice disputes dominate UK adjudication, and the courts keep punishing defective Pay Less Notices. In Advance JV v Enisca (TCC, 2022), an adjudicator ordered Advance to pay £2,717,992.88 because it did not issue a valid pay less notice against an interim application.\[8\] Cases like this make a Commercial Director sit up.
+There is genuine demand for payment-notice compliance among main contractors. Among regional house builders it is weaker, and partly covered already. The general case is strong. Payment-notice disputes dominate UK adjudication, and the courts keep punishing defective Pay Less Notices. In Advance JV v Enisca (TCC, 2022), an adjudicator ordered Advance to pay £2,717,992.88 because it did not issue a valid pay less notice against an interim application.\[8\] Cases like this make a Commercial Director sit up. Newer 2025–26 authority reinforces it: *Laing O'Rourke v Shepperton Studios* (a £3.2m payout over a notice technicality), *VMA Services v Project One London* [2025] EWHC 1815 (a £106,435 notified sum), and *Deerns UK Ltd v VDC LHR11 Ltd* [2026] EWHC 1509 — all drawn from the parallel "Subbie Payment Autopilot" round and unverified (see Caveats).
 
 The house builder case is weaker for three reasons:
 - **Payment model.** Many house builders pay trades on their own plot-stage valuations rather than on subcontractor applications. That shrinks the window for a default notice.
@@ -168,6 +168,10 @@ I found no published breakdown of adjudications by sector or party type. The KCL
 - **Eque2.** Claims more than 3,000 construction businesses.\[63\]\[64\] It offers PLN generation in Evaluate, payment-term capture in Construct for Sage (integrating with Sage 50/200/Intacct and Xero), Housebuilding with Mobile Tick Sheets, and a new subcontractor portal.\[2\]\[10\]\[64\]
 - **Site Samurai and Construction AI.** Both market statutory deadline tracking to SMEs.\[65\]\[66\]
 
+- **BuildQS.** £49–£249/month and already ships free Statutory Interest and Retention calculators as lead magnets; manual valuation entry, not contract parsing. Direct subcontractor distribution — the parallel "Subbie Payment Autopilot" round flags it as the highest-risk competitor on the subbie side. (Unverified — parallel round.)
+- **SubPay.** Reportedly free up to three contracts with an overlapping feature set, but "SubPay Ltd" was struck off Companies House on 3 Dec 2024 for filing no accounts — the signature of an abandoned company. The link between that struck-off entity and the product's listing is inferred, not confirmed. (Unverified — parallel round.)
+- **TrakPro.** Main-contractor-side, already supports UK and Irish regimes and generates pay-less notices; its logic could be re-pointed at subcontractors. (Unverified — parallel round.)
+
 I did not verify user satisfaction with ERP notice modules. I also did not independently verify COINS, MRI, Contour, IFS, Access ConQuest/EasyBuild, Procore, Chalkstring, Gather, Kojo, Archdesk or Buildertrend in this research. Treat claims about them as open. The zero-login link may be unique, but "no competitor has a mobile site-to-office progress tool" is false.
 
 ### H. Incumbent AI: understated
@@ -188,7 +192,7 @@ Causeway describes CausewayOne as "AI-first". It ran a public session on 15 July
   - up to 100: £900;
   - unlimited, plus forecasting and multi-entity: £1,500.
   - Unlimited users on every tier. Never charge subcontractors.
-- **Reasoning.** This sits above SME suites (£99–£699) because you are selling loss avoidance on claims typically worth £125k–£500k. It sits below ERP projects, and it scales with the value at risk rather than with seats, which also sidesteps the per-seat pressure behind the "death of SaaS" narrative. I could not verify typical point-solution budgets at £10m–£250m contractors, so test these tiers in discovery.
+- **Reasoning.** This sits above SME suites (£99–£699) because you are selling loss avoidance on claims typically worth £125k–£500k. It sits below ERP projects, and it scales with the value at risk rather than with seats, which also sidesteps the per-seat pressure behind the "death of SaaS" narrative. A comparable UK construction SaaS (HandsHQ) sustains £275–£750+/month, support that this category can carry several hundred pounds a month, so the £450–£900 tiers are credible even if £1,500 is untested (unverified — parallel "Subbie Payment Autopilot" round). I could not verify typical point-solution budgets at £10m–£250m contractors, so test these tiers in discovery.
 
 ## 10. "AI and the death of SaaS": both sides, and how durable your moats are
 
@@ -237,6 +241,7 @@ Pilots convert when there is a named owner, a fixed end date, agreed success met
 - The market-size figures are inferences from partial data.
 - No first-hand practitioner survey was available.
 - Several named competitors were not independently verified.
+- The subbie-side competitor intel (BuildQS, SubPay, TrakPro), the 2025–26 case law (Laing O'Rourke v Shepperton Studios, VMA Services, Deerns UK v VDC) and the HandsHQ pricing anchor come from `docs/research/OPPORTUNITY-BRIEF.md` (the parallel "Subbie Payment Autopilot" validation round) and have **not** been independently re-verified against primary sources. Treat them as leads to confirm, not established fact.
 
 ## Sources
 

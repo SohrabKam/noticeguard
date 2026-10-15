@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NoticeGuard — Subcontract payment compliance, automated</title>
+<meta name="description" content="NoticeGuard tracks every subcontract payment cycle and serves your statutory notices before the deadline — so a missed notice never costs you the full sum claimed.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111827'/><text x='16' y='22' text-anchor='middle' font-size='18' font-family='system-ui' fill='%23fbbf24'>N</text></svg>">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b; background: #fafaf9; line-height: 1.6;
+  }
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+  .nav-logo { font-weight: 700; font-size: 18px; color: #111827; letter-spacing: -0.3px; }
+  .nav-logo span { color: #d97706; }
+  .nav-cta { background: #111827; color: #fff; border: none; padding: 9px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-block; }
+  .nav-cta:hover { background: #1f2937; }
+
+  /* Hero */
+  .hero { padding: 80px 0 60px; text-align: center; }
+  .hero-badge { display: inline-block; background: #fef3c7; color: #92400e; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.3px; }
+  .hero h1 { font-size: clamp(36px, 5.5vw, 60px); font-weight: 700; line-height: 1.08; color: #0f172a; letter-spacing: -1.5px; margin-bottom: 20px; }
+  .hero h1 em { font-style: italic; font-family: Georgia, "Times New Roman", serif; color: #d97706; }
+  .hero p.sub { font-size: 19px; color: #475569; max-width: 580px; margin: 0 auto 32px; line-height: 1.5; }
+  .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary { background: #d97706; color: #fff; border: none; padding: 13px 28px; border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+  .btn-primary:hover { background: #b45309; }
+  .btn-secondary { background: #fff; color: #111827; border: 1.5px solid #d1d5db; padding: 13px 28px; border-radius: 7px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .btn-secondary:hover { border-color: #9ca3af; background: #f9fafb; }
+
+  /* Product preview */
+  .preview { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); margin: 0 auto; max-width: 960px; }
+  .preview-header { background: #111827; padding: 12px 16px; display: flex; gap: 6px; align-items: center; }
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .preview-dot:nth-child(1) { background: #ef4444; }
+  .preview-dot:nth-child(2) { background: #f59e0b; }
+  .preview-dot:nth-child(3) { background: #22c55e; }
+  .preview-url { color: #9ca3af; font-size: 12px; margin-left: 12px; }
+  .preview-body { padding: 20px; background: #fafaf9; }
+  .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .preview-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; }
+  .preview-card .name { font-weight: 600; font-size: 14px; color: #111827; }
+  .preview-card .cycle { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+  .preview-card .status { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+  .status-paid { background: #d1fae5; color: #065f46; }
+  .status-breach { background: #fee2e2; color: #991b1b; }
+  .status-due { background: #fef3c7; color: #92400e; }
+
+  /* Problem section */
+  .section { padding: 80px 0; }
+  .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #d97706; font-weight: 700; margin-bottom: 12px; }
+  .section h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; color: #0f172a; letter-spacing: -0.8px; margin-bottom: 16px; line-height: 1.15; }
+  .section p.lead { font-size: 17px; color: #475569; max-width: 600px; line-height: 1.55; }
+  .risk-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 24px; margin-top: 32px; }
+  .risk-box h3 { color: #991b1b; font-size: 16px; margin-bottom: 8px; }
+  .risk-box p { color: #7f1d1d; font-size: 15px; line-height: 1.6; }
+
+  /* Features grid */
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px; }
+  .feature { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 24px; }
+  .feature-icon { font-size: 22px; margin-bottom: 12px; }
+  .feature h4 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .feature p { font-size: 14px; color: #64748b; line-height: 1.55; }
+
+  /* How it works */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 40px; counter-reset: step; }
+  .step { position: relative; padding: 20px 0; border-top: 2px solid #e5e7eb; }
+  .step::before { counter-increment: step; content: "0" counter(step); font-size: 13px; font-weight: 700; color: #d97706; margin-bottom: 8px; display: block; }
+  .step h4 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .step p { font-size: 14px; color: #64748b; line-height: 1.5; }
+
+  /* Social proof */
+  .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 32px; }
+  .proof-item { text-align: center; padding: 20px; }
+  .proof-item .number { font-size: 36px; font-weight: 700; color: #0f172a; letter-spacing: -1px; }
+  .proof-item .label { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+  /* Pilot CTA */
+  .cta-section { background: #111827; border-radius: 16px; padding: 56px 40px; text-align: center; color: #fff; margin: 40px 0 80px; }
+  .cta-section h2 { color: #fff; font-size: clamp(26px, 4vw, 36px); margin-bottom: 12px; }
+  .cta-section p { color: #d1d5db; font-size: 16px; max-width: 480px; margin: 0 auto 28px; }
+  .cta-section .btn-primary { background: #f59e0b; color: #111827; font-size: 16px; padding: 15px 32px; }
+  .cta-section .btn-primary:hover { background: #d97706; }
+  .cta-pricing { font-size: 13px; color: #9ca3af; margin-top: 12px; }
+
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 440px; margin: 24px auto 0; text-align: left; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .form-grid input, .form-grid textarea {
+    width: 100%; padding: 11px 14px; border: 1.5px solid #374151; border-radius: 7px;
+    font-size: 14px; background: #1f2937; color: #f3f4f6; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .form-grid input:focus, .form-grid textarea:focus { outline: none; border-color: #f59e0b; }
+  .form-grid input::placeholder, .form-grid textarea::placeholder { color: #6b7280; }
+  .form-grid textarea { resize: vertical; min-height: 70px; }
+  .form-submit { margin-top: 16px; }
+  .form-status { font-size: 13px; margin-top: 8px; min-height: 20px; }
+
+  /* Footer */
+  .footer { border-top: 1px solid #e5e7eb; padding: 32px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #94a3b8; }
+  .footer a { color: #64748b; text-decoration: none; }
+  .footer a:hover { color: #0f172a; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero { padding: 48px 0 32px; }
+    .hero h1 { font-size: 32px; }
+    .section { padding: 48px 0; }
+    .cta-section { padding: 36px 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .preview-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="container">
+  <nav class="nav">
+    <div class="nav-logo">Notice<span>Guard</span></div>
+    <a href="#pilot" class="nav-cta">Request pilot access</a>
+  </nav>
+</header>
+
+<section class="hero container">
+  <div class="hero-badge">Now accepting pilot contractors</div>
+  <h1>Never lose a<br><em>smash-and-grab</em> again</h1>
+  <p class="sub">NoticeGuard tracks every subcontract payment cycle, serves your statutory notices before the deadline, and shows you exactly what you owe — retention included.</p>
+  <div class="hero-buttons">
+    <a href="#pilot" class="btn-primary">Request pilot access</a>
+    <a href="#how" class="btn-secondary">See how it works</a>
+  </div>
+</section>
+
+<div class="container">
+  <div class="preview">
+    <div class="preview-header">
+      <div class="preview-dot"></div><div class="preview-dot"></div><div class="preview-dot"></div>
+      <div class="preview-url">noticeguard.app/dashboard</div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-grid">
+        <div class="preview-card">
+          <div class="name">Apex Groundworks</div>
+          <div class="cycle">Cycle #1</div>
+          <span class="status status-paid">Paid — £38,000</span>
+        </div>
+        <div class="preview-card">
+          <div class="name">Midland Steel</div>
+          <div class="cycle">Cycle #1</div>
+          <span class="status status-breach">Breached — 3d overdue</span>
+        </div>
+        <div class="preview-card">
+          <div class="name">Premier M&E</div>
+          <div class="cycle">Cycle #2</div>
+          <span class="status status-due">Pay Less due in 4d</span>
+        </div>
+        <div class="preview-card">
+          <div class="name">Cladwell Cladding</div>
+          <div class="cycle">Cycle #1</div>
+          <span class="status status-due">Pay Less due in 5d</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section container" id="problem">
+  <div class="section-label">The problem</div>
+  <h2>One missed deadline is all it costs</h2>
+  <p class="lead">Under the Housing Grants, Construction and Regeneration Act 1996, if you miss the deadline to serve a Pay Less Notice, you owe the full amount the subcontractor claimed — regardless of whether the work was done.</p>
+  <div class="risk-box">
+    <h3>⚠ The risk is real, not theoretical</h3>
+    <p>If you're running JCT or NEC subcontracts across 10+ live projects, you're tracking deadlines in spreadsheets, juggling UK bank holidays that shift due dates, and hoping nothing slips. NoticeGuard automates the entire notice regime — deadlines, freeze-at-serve figures, email delivery, and audit trail — so you're never exposed by a missed date.</p>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-label">What it does</div>
+  <h2>Everything a commercial team needs</h2>
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">📋</div>
+      <h4>Contract setup wizard</h4>
+      <p>Capture the project, subcontractor, payment terms and activity schedule once. Every payment cycle for the contract's duration is generated automatically.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <h4>Applications & valuations</h4>
+      <p>Assess subcontractor applications line-by-line in a spreadsheet-style grid. Retention and net figures calculated for you — no Excel formulas to break.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📨</div>
+      <h4>Statutory notices, automated</h4>
+      <p>Payment Notices and Pay Less Notices are generated with figures frozen at serve time, emailed to subcontractors, and logged for delivery confirmation.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⏰</div>
+      <h4>Deadline sweeps</h4>
+      <p>Background jobs watch every live cycle for approaching or missed deadlines — UK bank holidays included — and send daily digests so nothing slips.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💰</div>
+      <h4>Drawdown & cash forecast</h4>
+      <p>Per-subcontract cash-out view with forecast profiles (S-curve, front-loaded, even). Portfolio-level cash forecast — the FD view, month by month.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <h4>Multi-tenant & audited</h4>
+      <p>Every record scoped to your organisation. Role-based access. Append-only audit trail of every notice, assessment, and communication.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📎</div>
+      <h4>Compliance tracking</h4>
+      <p>Per-subcontractor document checklists — insurance, CIS, H&S policies — with valid, expiring and expired status. Companies House watch included.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔌</div>
+      <h4>Accounting integrations</h4>
+      <p>Connect to iplicit, Sage, or Xero to pull subcontractor data automatically. Push manual subcontracts back as purchase orders.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container" id="how">
+  <div class="section-label">How it works</div>
+  <h2>Four steps, zero spreadsheets</h2>
+  <div class="steps">
+    <div class="step">
+      <h4>Set up the contract</h4>
+      <p>The wizard captures project, subcontractor, payment terms and activity schedule — then generates every cycle for the contract's duration.</p>
+    </div>
+    <div class="step">
+      <h4>Receive & assess applications</h4>
+      <p>Subcontractors submit by email or API. You assess line-by-line with retention and net calculated automatically.</p>
+    </div>
+    <div class="step">
+      <h4>Serve notices on time</h4>
+      <p>Payment and Pay Less Notices are generated, emailed, and logged before the statutory deadline — every cycle, every time.</p>
+    </div>
+    <div class="step">
+      <h4>Stay ahead of what's coming</h4>
+      <p>Background sweeps flag approaching deadlines, expiring documents, and retention release dates — daily digest to your inbox.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-label">Built for compliance</div>
+  <h2>RICS-ready from day one</h2>
+  <p class="lead">NoticeGuard was built against the RICS <em>Responsible use of AI in surveying practice</em> standard (effective March 2026). AI governance register, risk register, dip-sampling tooling, and named-approver workflow — all included. AI flags what needs your attention. Your QS still certifies. Every figure traces to source.</p>
+</section>
+
+<section class="container" id="pilot">
+  <div class="cta-section">
+    <h2>Now accepting pilot contractors</h2>
+    <p>We're onboarding a limited number of UK main contractors and specialist subcontractors at £250/month. You'll shape the product before wider release.</p>
+    <form id="pilot-form">
+      <div class="form-grid">
+        <input type="text" name="name" placeholder="Full name" required>
+        <input type="email" name="workEmail" placeholder="Work email" required>
+        <input type="text" name="company" placeholder="Company" class="full" required>
+        <textarea name="message" placeholder="Anything else? (optional)" class="full"></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-primary" id="pilot-submit">Request pilot access</button>
+      </div>
+      <div class="form-status" id="pilot-status"></div>
+    </form>
+    <p class="cta-pricing">Pilot: £250/month · Standard: £450–£1,500/month based on active subcontracts</p>
+  </div>
+</section>
+
+<footer class="container footer">
+  <span>© 2026 NoticeGuard</span>
+  <span>NoticeGuard tracks statutory deadlines — it does not provide legal advice.</span>
+</footer>
+
+<script>
+const API = "https://builder-ops.vercel.app/api/waitlist";
+(function () {
+  const form = document.getElementById("pilot-form");
+  const status = document.getElementById("pilot-status");
+  const btn = document.getElementById("pilot-submit");
+  if (!form) return;
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const data = {
+      name: form.name.value.trim(),
+      workEmail: form.workEmail.value.trim(),
+      company: form.company.value.trim(),
+      message: form.message.value.trim(),
+    };
+    if (!data.name || !data.workEmail || !data.company) {
+      status.style.color = "#fca5a5";
+      status.textContent = "Please fill in your name, work email and company.";
+      return;
+    }
+    btn.disabled = true; btn.textContent = "Sending…";
+    status.style.color = "#9ca3af"; status.textContent = "Sending…";
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        form.reset();
+        status.style.color = "#86efac";
+        status.textContent = "Thanks — we'll be in touch shortly.";
+        btn.textContent = "Request received ✓";
+      } else {
+        status.style.color = "#fca5a5";
+        status.textContent = json.error || "Something went wrong — please try again.";
+        btn.disabled = false; btn.textContent = "Request pilot access";
+      }
+    } catch (err) {
+      btn.disabled = false; btn.textContent = "Request pilot access";
+      status.style.color = "#fca5a5";
+      status.textContent = "Something went wrong — please try again.";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
