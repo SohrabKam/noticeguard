@@ -1,11 +1,11 @@
 # NoticeGuard Pilot Outreach — Email Drafts
 Generated 2026-10-15
-38 contacts · 0 with email · 38 need email lookup
+38 contacts · 38 with email · 0 need email lookup
 
 ## Priority order — send these first
 
 ## BW — Anthony Anstey (Commercial Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** anthony.anstey@bw-uk.com
 
 **Subject:** BW — subcontract notice tracking
 
@@ -41,7 +41,7 @@ Sohrab
 ---
 
 ## BW — Paul Kavanagh (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** paul.kavanagh@bw-uk.com
 
 **Subject:** BW — subcontract notice tracking
 
@@ -77,7 +77,7 @@ Sohrab
 ---
 
 ## Briggs & Forrester — Mike Burton (Group Chairman)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mike.burton@briggsandforrester.co.uk
 
 **Subject:** Briggs & Forrester — subcontract notice tracking
 
@@ -113,7 +113,7 @@ Sohrab
 ---
 
 ## Briggs & Forrester — Matthew Orme (Operations Director (Living))
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** matthew.orme@briggsandforrester.co.uk
 
 **Subject:** Briggs & Forrester — subcontract notice tracking
 
@@ -149,7 +149,7 @@ Sohrab
 ---
 
 ## Bennett Construction — Mark Keyes (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mark.keyes@bennettconstruction.co.uk
 
 **Subject:** Bennett Construction — subcontract notice tracking
 
@@ -185,7 +185,7 @@ Sohrab
 ---
 
 ## HBC (ex Henry Boot) — James Smith (Finance Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** james.smith@hbccontracts.co.uk
 
 **Subject:** HBC (ex Henry Boot) — subcontract notice tracking
 
@@ -221,7 +221,7 @@ Sohrab
 ---
 
 ## McLaren Construction — Paul Woodhams (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** paul.woodhams@mclarengroup.com
 
 **Subject:** McLaren Construction — subcontract notice tracking
 
@@ -257,7 +257,7 @@ Sohrab
 ---
 
 ## Integral UK — Mat Noon (Divisional Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mat.noon@integral.co.uk
 
 **Subject:** Integral UK — subcontract notice tracking
 
@@ -293,7 +293,7 @@ Sohrab
 ---
 
 ## Willmott Dixon — Rick Willmott (Group Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** rick.willmott@willmottdixon.co.uk
 
 **Subject:** Willmott Dixon — subcontract notice tracking
 
@@ -329,7 +329,7 @@ Sohrab
 ---
 
 ## Galliford Try — Bill Hocking (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** bill.hocking@gallifordtry.co.uk
 
 **Subject:** Galliford Try — subcontract notice tracking
 
@@ -365,7 +365,7 @@ Sohrab
 ---
 
 ## Bowmer & Kirkland — John Kirkland (Chairman)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** john.kirkland@bandk.co.uk
 
 **Subject:** Bowmer & Kirkland — subcontract notice tracking
 
@@ -401,7 +401,7 @@ Sohrab
 ---
 
 ## Graham Construction — Andrew Henry (Managing Director (Building))
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** andrew.henry@graham.co.uk
 
 **Subject:** Graham Construction — subcontract notice tracking
 
@@ -437,7 +437,7 @@ Sohrab
 ---
 
 ## J Murphy & Sons — John Murphy (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** john.murphy@murphygroup.co.uk
 
 **Subject:** J Murphy & Sons — subcontract notice tracking
 
@@ -473,7 +473,7 @@ Sohrab
 ---
 
 ## Tilbury Douglas — Paul Gandy (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** paul.gandy@tilburydouglas.co.uk
 
 **Subject:** Tilbury Douglas — subcontract notice tracking
 
@@ -509,7 +509,7 @@ Sohrab
 ---
 
 ## VolkerFitzpatrick — Richard Offord (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** richard.offord@volkerfitzpatrick.co.uk
 
 **Subject:** VolkerFitzpatrick — subcontract notice tracking
 
@@ -545,7 +545,7 @@ Sohrab
 ---
 
 ## Robertson Group — Elliot Robertson (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** elliot.robertson@robertson.co.uk
 
 **Subject:** Robertson Group — subcontract notice tracking
 
@@ -581,7 +581,7 @@ Sohrab
 ---
 
 ## Stepnell — Tom Wakeford (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** tom.wakeford@stepnell.co.uk
 
 **Subject:** Stepnell — subcontract notice tracking
 
@@ -617,7 +617,7 @@ Sohrab
 ---
 
 ## McLaughlin & Harvey — John Marner (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** john.marner@mclaughlin-harvey.com
 
 **Subject:** McLaughlin & Harvey — subcontract notice tracking
 
@@ -653,7 +653,7 @@ Sohrab
 ---
 
 ## Gilbert-Ash — Ray Hutchinson (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** ray.hutchinson@gilbert-ash.com
 
 **Subject:** Gilbert-Ash — subcontract notice tracking
 
@@ -689,7 +689,7 @@ Sohrab
 ---
 
 ## NG Bailey — David Hurcomb (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** david.hurcomb@ngbailey.com
 
 **Subject:** NG Bailey — subcontract notice tracking
 
@@ -725,7 +725,7 @@ Sohrab
 ---
 
 ## TClarke — Mike Crowder (Group Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mike.crowder@tclarke.co.uk
 
 **Subject:** TClarke — subcontract notice tracking
 
@@ -761,7 +761,7 @@ Sohrab
 ---
 
 ## Crown House Technologies — Mark Tant (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mark.tant@crownhouse.co.uk
 
 **Subject:** Crown House Technologies — subcontract notice tracking
 
@@ -797,7 +797,7 @@ Sohrab
 ---
 
 ## Imtech (UK) — Paul Kavanagh (Managing Director (UK&I))
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** paul.kavanagh@imtech.co.uk
 
 **Subject:** Imtech (UK) — subcontract notice tracking
 
@@ -833,7 +833,7 @@ Sohrab
 ---
 
 ## SES Engineering Services — Steve Joyce (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** steve.joyce@ses-ltd.co.uk
 
 **Subject:** SES Engineering Services — subcontract notice tracking
 
@@ -869,7 +869,7 @@ Sohrab
 ---
 
 ## Overbury — Mark Smith (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mark.smith@overbury.com
 
 **Subject:** Overbury — subcontract notice tracking
 
@@ -905,7 +905,7 @@ Sohrab
 ---
 
 ## BW: Workplace Experts — Steve Elliott (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** steve.elliott@bw-uk.com
 
 **Subject:** BW: Workplace Experts — subcontract notice tracking
 
@@ -941,7 +941,7 @@ Sohrab
 ---
 
 ## Parkeray — Christian Parker (Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** christian.parker@parkeray.co.uk
 
 **Subject:** Parkeray — subcontract notice tracking
 
@@ -977,7 +977,7 @@ Sohrab
 ---
 
 ## JN Bentley — Paul Bentley (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** paul.bentley@jnbentley.co.uk
 
 **Subject:** JN Bentley — subcontract notice tracking
 
@@ -1013,7 +1013,7 @@ Sohrab
 ---
 
 ## Clancy Group — Matt Cannon (Chief Executive Officer)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** matt.cannon@theclancygroup.co.uk
 
 **Subject:** Clancy Group — subcontract notice tracking
 
@@ -1049,7 +1049,7 @@ Sohrab
 ---
 
 ## Barhale — Martin Brown (Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** martin.brown@barhale.co.uk
 
 **Subject:** Barhale — subcontract notice tracking
 
@@ -1085,7 +1085,7 @@ Sohrab
 ---
 
 ## Beard Construction — Mark Beard (Chairman)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** mark.beard@beardconstruction.co.uk
 
 **Subject:** Beard Construction — subcontract notice tracking
 
@@ -1121,7 +1121,7 @@ Sohrab
 ---
 
 ## R G Carter — Robert Carter (Chairman)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** robert.carter@rgcarter.co.uk
 
 **Subject:** R G Carter — subcontract notice tracking
 
@@ -1157,7 +1157,7 @@ Sohrab
 ---
 
 ## Speller Metcalfe — Andy Metcalfe (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** andy.metcalfe@spellermetcalfe.com
 
 **Subject:** Speller Metcalfe — subcontract notice tracking
 
@@ -1193,7 +1193,7 @@ Sohrab
 ---
 
 ## Neilcott Construction — David Powell (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** david.powell@neilcott.co.uk
 
 **Subject:** Neilcott Construction — subcontract notice tracking
 
@@ -1229,7 +1229,7 @@ Sohrab
 ---
 
 ## Baxall Construction — Malcolm Clarke (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** malcolm.clarke@baxallconstruction.co.uk
 
 **Subject:** Baxall Construction — subcontract notice tracking
 
@@ -1265,7 +1265,7 @@ Sohrab
 ---
 
 ## GMI Construction — Lee Powell (Group Chief Executive)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** lee.powell@gmi.co.uk
 
 **Subject:** GMI Construction — subcontract notice tracking
 
@@ -1301,7 +1301,7 @@ Sohrab
 ---
 
 ## Farrans Construction — Martin O'Kane (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** martin.o'kane@farrans.com
 
 **Subject:** Farrans Construction — subcontract notice tracking
 
@@ -1337,7 +1337,7 @@ Sohrab
 ---
 
 ## Prater — Simon Kydd (Managing Director)
-*No email on file — find via Hunter.io or LinkedIn*
+**To:** simon.kydd@prater.co.uk
 
 **Subject:** Prater — subcontract notice tracking
 
@@ -1375,8 +1375,8 @@ Sohrab
 
 ## Stats
 - Total contacts: 38
-- Ready to send (have email): 0
-- Need email lookup: 38
+- Ready to send (have email): 38
+- Need email lookup: 0
 
 ## How to find missing emails
 1. **Hunter.io** (free tier: 25 searches/month) — enter company domain, it finds email patterns

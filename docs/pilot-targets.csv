@@ -1,42 +1,42 @@
-Company,Contact Name,Role,Description,Source
-BW,Anthony Anstey,Commercial Director,"London-based employee-owned main contractor, JCT/NEC subcontracts",Construction Enquirer
-BW,Paul Kavanagh,Managing Director,London-based employee-owned main contractor,Construction Enquirer
-Briggs & Forrester,Mike Burton,Group Chairman,"Northampton M&E/building services specialist, £240m turnover",Construction Enquirer
-Briggs & Forrester,Matthew Orme,Operations Director (Living),M&E specialist - Living division,Construction Enquirer
-Bennett Construction,Mark Keyes,Managing Director,"Built £132m Guildford scheme, main contractor",Construction Enquirer
-HBC (ex Henry Boot),James Smith,Finance Director,"£110m turnover, MBO from Henry Boot, main contractor",Construction Enquirer
-McLaren Construction,Paul Woodhams,Managing Director,"£229m Ebury Estate rebuild, major London contractor",Construction Enquirer
-Integral UK,Mat Noon,Divisional Director,"JLL-owned M&E specialist, £273m turnover",Construction Enquirer
-Kier Group,Andrew Davies,Chief Executive,"Major UK construction & infrastructure, £3.4bn revenue",Companies House / public
-Morgan Sindall,John Morgan,Chief Executive,"UK construction & regeneration, £3.6bn revenue",Companies House / public
-Willmott Dixon,Rick Willmott,Group Chief Executive,"Privately-owned construction & interiors, £1.3bn",Companies House / public
-Galliford Try,Bill Hocking,Chief Executive,"UK construction group, building & infrastructure",Companies House / public
-Bowmer & Kirkland,John Kirkland,Chairman,"Privately-owned construction & development, £1.1bn",Companies House / public
-Graham Construction,Andrew Henry,Managing Director (Building),"Building, civil engineering & fit-out, £700m+",Companies House / public
-J Murphy & Sons,John Murphy,Chief Executive,"Civil engineering & construction, £1.4bn",Companies House / public
-Tilbury Douglas,Paul Gandy,Managing Director,"Building, engineering & infrastructure",Companies House / public
-VolkerFitzpatrick,Richard Offord,Managing Director,"Civil engineering & building, VolkerWessels UK",Companies House / public
-Robertson Group,Elliot Robertson,Chief Executive,"Scottish construction, infrastructure & FM",Companies House / public
-Stepnell,Tom Wakeford,Managing Director,"Regional building contractor, £150m turnover",Companies House / public
-McLaughlin & Harvey,John Marner,Chief Executive,"Civil engineering & building, £500m+",Companies House / public
-Gilbert-Ash,Ray Hutchinson,Managing Director,"Fit-out & construction, NI & UK, £200m+",Companies House / public
-NG Bailey,David Hurcomb,Chief Executive,"UK's largest M&E contractor, £600m+ turnover",Companies House / public
-TClarke,Mike Crowder,Group Chief Executive,"Building services / M&E, £490m revenue",Companies House / public
-Crown House Technologies,Mark Tant,Managing Director,"M&E contractor, part of Laing O'Rourke",Companies House / public
-Imtech (UK),Paul Kavanagh,Managing Director (UK&I),"Technical services / M&E, Dalkia Energy",Companies House / public
-SES Engineering Services,Steve Joyce,Managing Director,"M&E design & install, part of Wates Group",Companies House / public
-Balfour Beatty Kilpatrick,John MacDonagh,Managing Director,"M&E, Balfour Beatty subsidiary",Companies House / public
-Overbury,Mark Smith,Managing Director,"Major UK fit-out contractor, Morgan Sindall group",Companies House / public
-BW: Workplace Experts,Steve Elliott,Managing Director,London commercial fit-out specialist,Companies House / public
-Parkeray,Christian Parker,Director,London fit-out & refurbishment,Companies House / public
-JN Bentley,Paul Bentley,Managing Director,"Civil engineering, water & environment, £350m+",Companies House / public
-Clancy Group,Matt Cannon,Chief Executive Officer,"Civil engineering & utilities, £300m+",Companies House / public
-Barhale,Martin Brown,Chief Executive,Civil engineering & infrastructure,Companies House / public
-Beard Construction,Mark Beard,Chairman,"Southern England building contractor, £170m",Companies House / public
-R G Carter,Robert Carter,Chairman,"East Anglia building & construction, £200m+",Companies House / public
-Speller Metcalfe,Andy Metcalfe,Managing Director,"West Midlands building contractor, £130m",Companies House / public
-Neilcott Construction,David Powell,Managing Director,"South East building contractor, £140m",Companies House / public
-Baxall Construction,Malcolm Clarke,Managing Director,Kent/South East building contractor,Companies House / public
-GMI Construction,Lee Powell,Group Chief Executive,"Yorkshire/NW building contractor, £250m",Companies House / public
-Farrans Construction,Martin O'Kane,Managing Director,"Civil engineering & building, £350m+, ROI/UK",Companies House / public
-Prater,Simon Kydd,Managing Director,Leading UK facade & roofing contractor,Companies House / public
+Company,Contact Name,Role,Email,Domain,Description,Source
+BW,Anthony Anstey,Commercial Director,anthony.anstey@bw-uk.com,bw-uk.com,"London-based employee-owned main contractor, JCT/NEC subcontracts",Pattern guess (verify before sending)
+BW,Paul Kavanagh,Managing Director,paul.kavanagh@bw-uk.com,bw-uk.com,London-based employee-owned main contractor,Pattern guess (verify before sending)
+Briggs & Forrester,Mike Burton,Group Chairman,mike.burton@briggsandforrester.co.uk,briggsandforrester.co.uk,"Northampton M&E/building services specialist, £240m turnover",Pattern guess (verify before sending)
+Briggs & Forrester,Matthew Orme,Operations Director (Living),matthew.orme@briggsandforrester.co.uk,briggsandforrester.co.uk,M&E specialist - Living division,Pattern guess (verify before sending)
+Bennett Construction,Mark Keyes,Managing Director,mark.keyes@bennettconstruction.co.uk,bennettconstruction.co.uk,"Built £132m Guildford scheme, main contractor",Pattern guess (verify before sending)
+HBC (ex Henry Boot),James Smith,Finance Director,james.smith@hbccontracts.co.uk,hbccontracts.co.uk,"£110m turnover, MBO from Henry Boot, main contractor",Pattern guess (verify before sending)
+McLaren Construction,Paul Woodhams,Managing Director,paul.woodhams@mclarengroup.com,mclarengroup.com,"£229m Ebury Estate rebuild, major London contractor",Pattern guess (verify before sending)
+Integral UK,Mat Noon,Divisional Director,mat.noon@integral.co.uk,integral.co.uk,"JLL-owned M&E specialist, £273m turnover",Pattern guess (verify before sending)
+Kier Group,Andrew Davies,Chief Executive,andrew.davies@kier.co.uk,kier.co.uk,"Major UK construction & infrastructure, £3.4bn revenue",Pattern guess (verify before sending)
+Morgan Sindall,John Morgan,Chief Executive,john.morgan@morgansindall.com,morgansindall.com,"UK construction & regeneration, £3.6bn revenue",Pattern guess (verify before sending)
+Willmott Dixon,Rick Willmott,Group Chief Executive,rick.willmott@willmottdixon.co.uk,willmottdixon.co.uk,"Privately-owned construction & interiors, £1.3bn",Pattern guess (verify before sending)
+Galliford Try,Bill Hocking,Chief Executive,bill.hocking@gallifordtry.co.uk,gallifordtry.co.uk,"UK construction group, building & infrastructure",Pattern guess (verify before sending)
+Bowmer & Kirkland,John Kirkland,Chairman,john.kirkland@bandk.co.uk,bandk.co.uk,"Privately-owned construction & development, £1.1bn",Pattern guess (verify before sending)
+Graham Construction,Andrew Henry,Managing Director (Building),andrew.henry@graham.co.uk,graham.co.uk,"Building, civil engineering & fit-out, £700m+",Pattern guess (verify before sending)
+J Murphy & Sons,John Murphy,Chief Executive,john.murphy@murphygroup.co.uk,murphygroup.co.uk,"Civil engineering & construction, £1.4bn",Pattern guess (verify before sending)
+Tilbury Douglas,Paul Gandy,Managing Director,paul.gandy@tilburydouglas.co.uk,tilburydouglas.co.uk,"Building, engineering & infrastructure",Pattern guess (verify before sending)
+VolkerFitzpatrick,Richard Offord,Managing Director,richard.offord@volkerfitzpatrick.co.uk,volkerfitzpatrick.co.uk,"Civil engineering & building, VolkerWessels UK",Pattern guess (verify before sending)
+Robertson Group,Elliot Robertson,Chief Executive,elliot.robertson@robertson.co.uk,robertson.co.uk,"Scottish construction, infrastructure & FM",Pattern guess (verify before sending)
+Stepnell,Tom Wakeford,Managing Director,tom.wakeford@stepnell.co.uk,stepnell.co.uk,"Regional building contractor, £150m turnover",Pattern guess (verify before sending)
+McLaughlin & Harvey,John Marner,Chief Executive,john.marner@mclaughlin-harvey.com,mclaughlin-harvey.com,"Civil engineering & building, £500m+",Pattern guess (verify before sending)
+Gilbert-Ash,Ray Hutchinson,Managing Director,ray.hutchinson@gilbert-ash.com,gilbert-ash.com,"Fit-out & construction, NI & UK, £200m+",Pattern guess (verify before sending)
+NG Bailey,David Hurcomb,Chief Executive,david.hurcomb@ngbailey.com,ngbailey.com,"UK's largest M&E contractor, £600m+ turnover",Pattern guess (verify before sending)
+TClarke,Mike Crowder,Group Chief Executive,mike.crowder@tclarke.co.uk,tclarke.co.uk,"Building services / M&E, £490m revenue",Pattern guess (verify before sending)
+Crown House Technologies,Mark Tant,Managing Director,mark.tant@crownhouse.co.uk,crownhouse.co.uk,"M&E contractor, part of Laing O'Rourke",Pattern guess (verify before sending)
+Imtech (UK),Paul Kavanagh,Managing Director (UK&I),paul.kavanagh@imtech.co.uk,imtech.co.uk,"Technical services / M&E, Dalkia Energy",Pattern guess (verify before sending)
+SES Engineering Services,Steve Joyce,Managing Director,steve.joyce@ses-ltd.co.uk,ses-ltd.co.uk,"M&E design & install, part of Wates Group",Pattern guess (verify before sending)
+Balfour Beatty Kilpatrick,John MacDonagh,Managing Director,john.macdonagh@balfourbeatty.com,balfourbeatty.com,"M&E, Balfour Beatty subsidiary",Pattern guess (verify before sending)
+Overbury,Mark Smith,Managing Director,mark.smith@overbury.com,overbury.com,"Major UK fit-out contractor, Morgan Sindall group",Pattern guess (verify before sending)
+BW: Workplace Experts,Steve Elliott,Managing Director,steve.elliott@bw-uk.com,bw-uk.com,London commercial fit-out specialist,Pattern guess (verify before sending)
+Parkeray,Christian Parker,Director,christian.parker@parkeray.co.uk,parkeray.co.uk,London fit-out & refurbishment,Pattern guess (verify before sending)
+JN Bentley,Paul Bentley,Managing Director,paul.bentley@jnbentley.co.uk,jnbentley.co.uk,"Civil engineering, water & environment, £350m+",Pattern guess (verify before sending)
+Clancy Group,Matt Cannon,Chief Executive Officer,matt.cannon@theclancygroup.co.uk,theclancygroup.co.uk,"Civil engineering & utilities, £300m+",Pattern guess (verify before sending)
+Barhale,Martin Brown,Chief Executive,martin.brown@barhale.co.uk,barhale.co.uk,Civil engineering & infrastructure,Pattern guess (verify before sending)
+Beard Construction,Mark Beard,Chairman,mark.beard@beardconstruction.co.uk,beardconstruction.co.uk,"Southern England building contractor, £170m",Pattern guess (verify before sending)
+R G Carter,Robert Carter,Chairman,robert.carter@rgcarter.co.uk,rgcarter.co.uk,"East Anglia building & construction, £200m+",Pattern guess (verify before sending)
+Speller Metcalfe,Andy Metcalfe,Managing Director,andy.metcalfe@spellermetcalfe.com,spellermetcalfe.com,"West Midlands building contractor, £130m",Pattern guess (verify before sending)
+Neilcott Construction,David Powell,Managing Director,david.powell@neilcott.co.uk,neilcott.co.uk,"South East building contractor, £140m",Pattern guess (verify before sending)
+Baxall Construction,Malcolm Clarke,Managing Director,malcolm.clarke@baxallconstruction.co.uk,baxallconstruction.co.uk,Kent/South East building contractor,Pattern guess (verify before sending)
+GMI Construction,Lee Powell,Group Chief Executive,lee.powell@gmi.co.uk,gmi.co.uk,"Yorkshire/NW building contractor, £250m",Pattern guess (verify before sending)
+Farrans Construction,Martin O'Kane,Managing Director,martin.o'kane@farrans.com,farrans.com,"Civil engineering & building, £350m+, ROI/UK",Pattern guess (verify before sending)
+Prater,Simon Kydd,Managing Director,simon.kydd@prater.co.uk,prater.co.uk,Leading UK facade & roofing contractor,Pattern guess (verify before sending)

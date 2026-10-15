@@ -78,8 +78,11 @@ ${SENDER_NAME}`,
 function generateMarkdown(contacts) {
   const drafts = contacts.map((c) => {
     const email = generateEmail(c)
+    const emailLine = c.Email
+      ? `**To:** ${c.Email}`
+      : "*No email — find via Hunter.io or LinkedIn*"
     return `## ${c.Company} — ${c["Contact Name"]} (${c.Role})
-*No email on file — find via Hunter.io or LinkedIn*
+${emailLine}
 
 **Subject:** ${email.subject}
 
