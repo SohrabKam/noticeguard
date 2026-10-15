@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
   const origin = request.headers.get("origin") ?? ""
   const allowedOrigins = [
     "https://noticeguard-landing.vercel.app",
+    "https://builder-ops.vercel.app",
     "https://noticeguard.app",
     "https://www.noticeguard.app",
   ]
